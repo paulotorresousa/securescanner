@@ -316,10 +316,10 @@
   
       try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        alert("✅ Login realizado com sucesso!");
+        alert("Login realizado com sucesso!");
         window.location.href = "index.html"; // Redirecione para onde quiser
       } catch (error) {
-        alert("❌ Erro no login: " + error.message);
+        alert("Erro no login: " + error.message);
       }
     });
   </script>
