@@ -32,34 +32,30 @@
       background-size: 20px 20px;
     }
 
-    .logo {
+    .login-logo {
       display: flex;
       align-items: center;
-      margin-bottom: 40px;
+      gap: 0.75rem;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
     }
 
-    .login-logo {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
-        }
+    .login-logo-icon {
+      width: 40px;
+      height: 40px;
+      background-color: white;
+      color: var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-        .login-logo-icon {
-            width: 40px;
-            height: 40px;
-            background-color: white;
-            color: var(--primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .icon {
-  color: #2563eb;
-}
+    .icon {
+      color: #2563eb;
+    }
+
     .left-panel h1 {
       font-size: 32px;
       margin-bottom: 20px;
@@ -77,22 +73,22 @@
     }
 
     .login-feature {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-        }
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
 
-        .login-feature-icon {
-            width: 24px;
-            height: 24px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
+    .login-feature-icon {
+      width: 24px;
+      height: 24px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
 
     .right-panel {
       flex: 1;
@@ -102,27 +98,6 @@
       align-items: center;
       padding: 20px;
     }
-    .alert {
-      padding: 12px;
-      margin-bottom: 16px;
-      border-radius: 8px;
-      font-weight: 500;
-      text-align: center;
-      opacity: 0;
-      transform: translateY(-10px);
-      transition: opacity 0.4s ease, transform 0.4s ease;
-    }
-
-    .alert.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .alert-danger {
-      background-color: #f8d7da;
-      color: #721c24;
-    }
-    
 
     .form-container {
       width: 100%;
@@ -166,9 +141,9 @@
     }
 
     button:hover {
-            background-color:  #253563;
-            border-color:  #253563;
-        }
+      background-color:  #253563;
+      border-color:  #253563;
+    }
 
     .checkbox {
       display: flex;
@@ -209,6 +184,27 @@
       margin-left: 4px;
     }
 
+    .alert {
+      padding: 12px;
+      margin-bottom: 16px;
+      border-radius: 8px;
+      font-weight: 500;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .alert.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .alert-danger {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
     @media (max-width: 900px) {
       body {
         flex-direction: column;
@@ -229,57 +225,21 @@
 <body>
   <div class="left-panel">
     <div class="login-logo">
-        <div class="login-logo-icon">
-            <svg class="icon"  xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M 8 1 a 2 2 0 0 1 2 2 v 4 H 6 V 3 a 2 2 0 0 1 2 -2 Z m 3 6 V 3 a 3 3 0 0 0 -6 0 v 4 a 2 2 0 0 0 -2 2 v 5 a 2 2 0 0 0 2 2 h 6 a 2 2 0 0 0 2 -2 V 9 a 2 2 0 0 0 -2 -2 Z"/>
-            </svg>
-        </div>
-        <span>SecureScanner</span>
+      <div class="login-logo-icon">
+        <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M 8 1 a 2 2 0 0 1 2 2 v 4 H 6 V 3 a 2 2 0 0 1 2 -2 Z m 3 6 V 3 a 3 3 0 0 0 -6 0 v 4 a 2 2 0 0 0 -2 2 v 5 a 2 2 0 0 0 2 2 h 6 a 2 2 0 0 0 2 -2 V 9 a 2 2 0 0 0 -2 -2 Z"/>
+        </svg>
+      </div>
+      <span>SecureScanner</span>
     </div>
     <h1>Análise de Vulnerabilidades Inteligente</h1>
     <p>Identifique, analise e corrija vulnerabilidades em sua infraestrutura de TI, OT e IoT com nossa plataforma avançada de segurança.</p>
     <ul class="features">
-        <li class="login-feature">
-            <div class="login-feature-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
-                </svg>
-            </div>
-            <span>Mapeamento automático de ativos de TI, OT e IoT</span>
-        </li>
-        <li class="login-feature">
-            <div class="login-feature-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
-                </svg>
-            </div>
-            <span>Detecção de portas abertas e serviços ativos em tempo real</span>
-        </li>
-        <li class="login-feature">
-            <div class="login-feature-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
-                </svg>
-            </div>
-            <span>Avaliações não invasivas de impacto potencial</span>
-        </li>
-        <li class="login-feature">
-            <div class="login-feature-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
-                </svg>
-            </div>
-            <span>Recomendações personalizadas para mitigação de riscos</span>
-        </li>
-        <li class="login-feature">
-            <div class="login-feature-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
-                </svg>
-            </div>
-            <span>Visualização intuitiva</span>
-        </li>
-
+      <li class="login-feature"><div class="login-feature-icon">✔️</div>Mapeamento automático de ativos</li>
+      <li class="login-feature"><div class="login-feature-icon">✔️</div>Detecção de portas abertas</li>
+      <li class="login-feature"><div class="login-feature-icon">✔️</div>Avaliações não invasivas</li>
+      <li class="login-feature"><div class="login-feature-icon">✔️</div>Recomendações personalizadas</li>
+      <li class="login-feature"><div class="login-feature-icon">✔️</div>Visualização intuitiva</li>
     </ul>
   </div>
 
@@ -287,8 +247,10 @@
     <form id="loginForm" class="form-container">
       <h2>Bem-vindo ao SecureScanner</h2>
       <p>Faça login para acessar sua conta</p>
-
+      
+      <!-- MENSAGEM DE ERRO -->
       <div id="login-error-message" class="alert alert-danger"></div>
+      
       <input type="email" name="email" placeholder="Email" required />
       <input type="password" name="password" placeholder="Senha" required />
       <div class="checkbox">
@@ -307,13 +269,12 @@
       </div>
     </form>
   </div>
+
   <script type="module">
-    // Firebase SDKs
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
     import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-  
-    // Sua configuração do Firebase
+
     const firebaseConfig = {
       apiKey: "AIzaSyAnA0X3VK1jW4Gv2lkJ_Cp4g7jL1hQ36u4",
       authDomain: "scanner-c65ce.firebaseapp.com",
@@ -323,27 +284,26 @@
       appId: "1:731199717476:web:7d03c2f4acf2f06d5d5f71",
       measurementId: "G-R6QW0YRC58"
     };
-  
-    // Inicialização
+
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const auth = getAuth(app);
-  
-    // Lógica de login
+
     const loginForm = document.getElementById("loginForm");
     const errorDiv = document.getElementById("login-error-message");
+
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-  
+      errorDiv.classList.remove("show");
+
       const email = e.target.email.value;
       const password = e.target.password.value;
-  
+
       try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        
-        window.location.href = "index.html"; // Redirecione para onde quiser
-      }  catch (error) {
-        errorDiv.textContent = "Erro ao fazer login. Verifique seu e-mail e senha e tente novamente.";
+        window.location.href = "index.html";
+      } catch (error) {
+        errorDiv.textContent = "Erro no login: " + error.message;
         errorDiv.classList.add("show");
 
         setTimeout(() => {
@@ -352,6 +312,5 @@
       }
     });
   </script>
-  
 </body>
 </html>

@@ -308,13 +308,13 @@
           </div>
     
           <button type="submit" class="btn btn-primary">Criar Conta</button>
-          <a href="login.html">
+          <a href="index.html">
             <button type="button" class="btn btn-secondary" id="back-button">Voltar</button>
           </a>
         </form>
     
         <div class="login-link">
-          Já tem uma conta? <a href="login.html">Entrar</a>
+          Já tem uma conta? <a href="index.html">Entrar</a>
         </div>
       </div>
     
@@ -399,7 +399,13 @@ form.addEventListener("submit", async (e) => {
     });
 
    
-    window.location.href = "login.html";
+    const successDiv = document.getElementById("success-message");
+successDiv.style.display = "block";
+
+// Espera 3 segundos antes de redirecionar para o login
+setTimeout(() => {
+  window.location.href = "index.html";
+}, 3000);
   } catch (error) {
     errorDiv.textContent = error.message;
     errorDiv.style.display = "block";
