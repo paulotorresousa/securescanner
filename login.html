@@ -263,26 +263,66 @@
   </div>
 
   <div class="right-panel">
-    <div class="form-container">
+    <form id="loginForm" class="form-container">
       <h2>Bem-vindo ao SecureScanner</h2>
       <p>Faça login para acessar sua conta</p>
-      <input type="email" placeholder="Email">
-      <input type="password" placeholder="Senha" >
+      <input type="email" name="email" placeholder="Email" required />
+      <input type="password" name="password" placeholder="Senha" required />
       <div class="checkbox">
         <input type="checkbox" id="remember">
         <label for="remember">Lembrar-me neste dispositivo</label>
       </div>
-      <button>Entrar</button>
+      <button type="submit">Entrar</button>
       <div class="separator">ou</div>
       <div class="social-buttons">
-        <button>Google</button>
-        <button>GitHub</button>
+        <button type="button">Google</button>
+        <button type="button">GitHub</button>
       </div>
       <div class="bottom-links">
         <p>Esqueceu sua senha? <a href="esquecsenha.html">Recuperar senha</a></p>
         <p>Não tem uma conta? <a href="cadastro.html">Criar conta</a></p>
       </div>
-    </div>
+    </form>
   </div>
+  <script type="module">
+    // Firebase SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+  
+    // Sua configuração do Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyAnA0X3VK1jW4Gv2lkJ_Cp4g7jL1hQ36u4",
+      authDomain: "scanner-c65ce.firebaseapp.com",
+      projectId: "scanner-c65ce",
+      storageBucket: "scanner-c65ce.firebasestorage.app",
+      messagingSenderId: "731199717476",
+      appId: "1:731199717476:web:7d03c2f4acf2f06d5d5f71",
+      measurementId: "G-R6QW0YRC58"
+    };
+  
+    // Inicialização
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth(app);
+  
+    // Lógica de login
+    const loginForm = document.getElementById("loginForm");
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+  
+      const email = e.target.email.value;
+      const password = e.target.password.value;
+  
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        alert("✅ Login realizado com sucesso!");
+        window.location.href = "index.html"; // Redirecione para onde quiser
+      } catch (error) {
+        alert("❌ Erro no login: " + error.message);
+      }
+    });
+  </script>
+  
 </body>
 </html>
