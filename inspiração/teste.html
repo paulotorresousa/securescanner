@@ -1,0 +1,1734 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureScanner - Sistema Integrado de Análise de Vulnerabilidades</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #3b82f6;
+            --primary-lighter: #93c5fd;
+            --secondary: #475569;
+            --danger: #dc2626;
+            --warning: #f59e0b;
+            --success: #16a34a;
+            --info: #0ea5e9;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--gray-100);
+            color: var(--gray-800);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Login Page Styles */
+        .login-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .login-sidebar {
+            flex: 1;
+            background-color: var(--primary);
+            background-image: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-sidebar::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background-image: radial-gradient(circle, var(--primary-lighter) 10%, transparent 10.5%);
+            background-size: 20px 20px;
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .login-sidebar-content {
+            position: relative;
+            z-index: 1;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .login-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+        }
+
+        .login-logo-icon {
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .login-description {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .login-features {
+            list-style: none;
+        }
+
+        .login-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .login-feature-icon {
+            width: 24px;
+            height: 24px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .login-form-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .login-form-wrapper {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-form-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-form-subtitle {
+            color: var(--gray-600);
+        }
+
+        .login-form {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-hint {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+
+        .form-checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-checkbox {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+        }
+
+        .form-checkbox-label {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        .form-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+            border: none;
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background-color: var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--gray-300);
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+
+        .login-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .login-divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: var(--gray-400);
+        }
+
+        .login-divider::before,
+        .login-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background-color: var(--gray-300);
+        }
+
+        .login-divider span {
+            padding: 0 1rem;
+            font-size: 0.875rem;
+        }
+
+        .social-login {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .social-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 4px;
+            background-color: white;
+            color: var(--gray-700);
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .social-btn:hover {
+            background-color: var(--gray-100);
+            border-color: var(--gray-400);
+        }
+
+        /* Dashboard Styles */
+        header {
+            background-color: var(--dark);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: var(--gray-300);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: white;
+        }
+
+        nav a.active {
+            color: white;
+            position: relative;
+        }
+
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary);
+        }
+
+        .main-content {
+            padding: 2rem 0;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 0.5rem;
+        }
+
+        .card-description {
+            color: var(--gray-600);
+        }
+
+        .btn-icon {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .scan-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .scan-option {
+            border: 1px solid var(--gray-300);
+            border-radius: 4px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .scan-option:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .scan-option.selected {
+            border-color: var(--primary);
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+
+        .scan-option-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .scan-option-icon {
+            width: 24px;
+            height: 24px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.875rem;
+        }
+
+        .scan-option-title {
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .scan-option-description {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        .scan-progress {
+            display: none;
+            margin-top: 2rem;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background-color: var(--gray-200);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.5s;
+        }
+
+        .progress-status {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        .scan-results {
+            display: none;
+            margin-top: 2rem;
+        }
+
+        .results-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .summary-card-title {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-card-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-800);
+        }
+
+        .summary-card-critical .summary-card-value {
+            color: var(--danger);
+        }
+
+        .summary-card-high .summary-card-value {
+            color: var(--warning);
+        }
+
+        .summary-card-medium .summary-card-value {
+            color: var(--info);
+        }
+
+        .summary-card-low .summary-card-value {
+            color: var(--success);
+        }
+
+        .vulnerability-list {
+            margin-top: 1.5rem;
+        }
+
+        .vulnerability-item {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .vulnerability-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .vulnerability-title {
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .vulnerability-severity {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .severity-critical {
+            background-color: rgba(220, 38, 38, 0.1);
+            color: var(--danger);
+        }
+
+        .severity-high {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .severity-medium {
+            background-color: rgba(14, 165, 233, 0.1);
+            color: var(--info);
+        }
+
+        .severity-low {
+            background-color: rgba(22, 163, 74, 0.1);
+            color: var(--success);
+        }
+
+        .vulnerability-details {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        .vulnerability-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-sm {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--gray-300);
+            margin-bottom: 1.5rem;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--gray-600);
+            border-bottom: 2px solid transparent;
+            transition: color 0.3s, border-color 0.3s;
+        }
+
+        .tab:hover {
+            color: var(--gray-800);
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .chart-container {
+            height: 300px;
+            margin-bottom: 1.5rem;
+        }
+
+        .asset-map {
+            height: 400px;
+            background-color: var(--gray-100);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .asset-node {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+            z-index: 2;
+        }
+
+        .asset-node:hover {
+            transform: scale(1.1);
+        }
+
+        .asset-node.router {
+            background-color: var(--info);
+        }
+
+        .asset-node.server {
+            background-color: var(--secondary);
+        }
+
+        .asset-node.iot {
+            background-color: var(--warning);
+        }
+
+        .asset-node.workstation {
+            background-color: var(--success);
+        }
+
+        .asset-link {
+            position: absolute;
+            height: 2px;
+            background-color: var(--gray-400);
+            transform-origin: 0 0;
+            z-index: 1;
+        }
+
+        .asset-tooltip {
+            position: absolute;
+            background-color: white;
+            border-radius: 4px;
+            padding: 0.75rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            font-size: 0.875rem;
+            z-index: 3;
+            display: none;
+        }
+
+        .asset-tooltip-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--gray-800);
+        }
+
+        .asset-tooltip-info {
+            color: var(--gray-600);
+            margin-bottom: 0.25rem;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(37, 99, 235, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* User dropdown menu */
+        .user-menu {
+            position: relative;
+        }
+
+        .user-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .user-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
+        }
+
+        .user-name {
+            font-weight: 500;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 200px;
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-top: 0.5rem;
+            display: none;
+            z-index: 100;
+        }
+
+        .user-dropdown.active {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--gray-700);
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--gray-100);
+        }
+
+        .dropdown-item.logout {
+            border-top: 1px solid var(--gray-200);
+            color: var(--danger);
+        }
+
+        /* Alert styles */
+        .alert {
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .alert-icon {
+            flex-shrink: 0;
+            margin-top: 0.125rem;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .alert-danger {
+            background-color: rgba(220, 38, 38, 0.1);
+            border-left: 3px solid var(--danger);
+            color: var(--danger);
+        }
+
+        .alert-success {
+            background-color: rgba(22, 163, 74, 0.1);
+            border-left: 3px solid var(--success);
+            color: var(--success);
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+            }
+
+            .login-sidebar {
+                display: none;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav ul {
+                gap: 1rem;
+            }
+
+            .scan-options {
+                grid-template-columns: 1fr;
+            }
+
+            .results-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="login-page" class="login-container">
+        <div class="login-sidebar">
+            <div class="login-sidebar-content">
+                <div class="login-logo">
+                    <div class="login-logo-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                        </svg>
+                    </div>
+                    <span>SecureScanner</span>
+                </div>
+
+                <h1 class="login-title">Análise de Vulnerabilidades Inteligente</h1>
+                <p class="login-description">Identifique, analise e corrija vulnerabilidades em sua infraestrutura de TI, OT e IoT com nossa plataforma avançada de segurança.</p>
+
+                <ul class="login-features">
+                    <li class="login-feature">
+                        <div class="login-feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+                            </svg>
+                        </div>
+                        <span>Mapeamento automático de ativos de TI, OT e IoT</span>
+                    </li>
+                    <li class="login-feature">
+                        <div class="login-feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+                            </svg>
+                        </div>
+                        <span>Detecção de portas abertas e serviços ativos em tempo real</span>
+                    </li>
+                    <li class="login-feature">
+                        <div class="login-feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+                            </svg>
+                        </div>
+                        <span>Avaliações não invasivas de impacto potencial</span>
+                    </li>
+                    <li class="login-feature">
+                        <div class="login-feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+                            </svg>
+                        </div>
+                        <span>Recomendações personalizadas para mitigação de riscos</span>
+                    </li>
+                    <li class="login-feature">
+                        <div class="login-feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+                            </svg>
+                        </div>
+                        <span>Visualização intuitiva e relatórios detalhados</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="login-form-container">
+            <div class="login-form-wrapper">
+                <div class="login-form-header">
+                    <h2 class="login-form-title">Bem-vindo ao SecureScanner</h2>
+                    <p class="login-form-subtitle">Faça login para acessar sua conta</p>
+                </div>
+
+                <div id="login-alert" class="alert alert-danger" style="display: none;">
+                    <div class="alert-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                            <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+                        </svg>
+                    </div>
+                    <div class="alert-content">
+                        <div class="alert-title">Erro de autenticação</div>
+                        <p>Email ou senha incorretos. Por favor, tente novamente.</p>
+                    </div>
+                </div>
+
+                <form id="login-form" class="login-form">
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" class="form-input" placeholder="seu@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="form-label">Senha</label>
+                        <input type="password" id="password" class="form-input" placeholder="••••••••" required>
+                    </div>
+
+                    <div class="form-checkbox-group">
+                        <input type="checkbox" id="remember-me" class="form-checkbox">
+                        <label for="remember-me" class="form-checkbox-label">Lembrar-me neste dispositivo</label>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+                    </div>
+
+                    <div class="login-divider">
+                        <span>ou</span>
+                    </div>
+
+                    <div class="social-login">
+                        <button type="button" class="social-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M15.545 6.558a9.42 9.42 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.689 7.689 0 0 1 5.352 2.082l-2.284 2.284A4.347 4.347 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.792 4.792 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.702 3.702 0 0 0 1.599-2.431H8v-3.08h7.545z"/>
+                            </svg>
+                            Google
+                        </button>
+                        <button type="button" class="social-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+                            </svg>
+                            GitHub
+                        </button>
+                    </div>
+                </form>
+
+                <div class="login-footer">
+                    <p>Esqueceu sua senha? <a href="#">Recuperar senha</a></p>
+                    <p style="margin-top: 0.5rem;">Não tem uma conta? <a href="#">Criar conta</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Page -->
+    <div id="dashboard-page" style="display: none;">
+        <div class="loading-overlay">
+            <div class="spinner"></div>
+        </div>
+
+        <header>
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <div class="logo-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                            </svg>
+                        </div>
+                        <span>SecureScanner</span>
+                    </div>
+                    <nav>
+                        <ul>
+                            <li><a href="#" class="active">Dashboard</a></li>
+                            <li><a href="#">Scans</a></li>
+                            <li><a href="#">Relatórios</a></li>
+                            <li><a href="#">Configurações</a></li>
+                        </ul>
+                    </nav>
+                    <div class="user-menu">
+                        <div class="user-button" id="user-button">
+                            <div class="user-avatar">JS</div>
+                            <div class="user-name">João Silva</div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                            </svg>
+                        </div>
+                        <div class="user-dropdown" id="user-dropdown">
+                            <a href="#" class="dropdown-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+                                </svg>
+                                Meu Perfil
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+                                </svg>
+                                Configurações
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/>
+                                </svg>
+                                Notificações
+                            </a>
+                            <a href="#" class="dropdown-item logout" id="logout-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                                    <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                                </svg>
+                                Sair
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="container">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Análise de Vulnerabilidades</h2>
+                        <p class="card-description">Configure e inicie uma nova análise de vulnerabilidades para seu ambiente de rede.</p>
+                    </div>
+
+                    <form id="scan-form">
+                        <div class="form-group">
+                            <label for="ip-address" class="form-label">Endereço IP</label>
+                            <input type="text" id="ip-address" class="form-input" placeholder="Ex: 192.168.1.1" required>
+                            <p class="form-hint">Insira o endereço IP da rede que deseja analisar.</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subnet-mask" class="form-label">Máscara de Sub-rede</label>
+                            <input type="text" id="subnet-mask" class="form-input" placeholder="Ex: 255.255.255.0 ou /24" required>
+                            <p class="form-hint">Insira a máscara de sub-rede para determinar o escopo da análise.</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Opções de Análise</label>
+                            <div class="scan-options">
+                                <div class="scan-option selected" data-option="quick">
+                                    <div class="scan-option-header">
+                                        <div class="scan-option-icon">Q</div>
+                                        <div class="scan-option-title">Análise Rápida</div>
+                                    </div>
+                                    <p class="scan-option-description">Verifica portas comuns e vulnerabilidades conhecidas. Duração estimada: 5-10 minutos.</p>
+                                </div>
+
+                                <div class="scan-option" data-option="standard">
+                                    <div class="scan-option-header">
+                                        <div class="scan-option-icon">S</div>
+                                        <div class="scan-option-title">Análise Padrão</div>
+                                    </div>
+                                    <p class="scan-option-description">Verifica todas as portas e serviços ativos. Duração estimada: 15-30 minutos.</p>
+                                </div>
+
+                                <div class="scan-option" data-option="comprehensive">
+                                    <div class="scan-option-header">
+                                        <div class="scan-option-icon">C</div>
+                                        <div class="scan-option-title">Análise Completa</div>
+                                    </div>
+                                    <p class="scan-option-description">Análise detalhada incluindo verificações de IoT e OT. Duração estimada: 30-60 minutos.</p>
+                                </div>
+
+                                <div class="scan-option" data-option="custom">
+                                    <div class="scan-option-header">
+                                        <div class="scan-option-icon">P</div>
+                                        <div class="scan-option-title">Personalizada</div>
+                                    </div>
+                                    <p class="scan-option-description">Configure parâmetros específicos para sua análise.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary btn-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                                </svg>
+                                Iniciar Análise
+                            </button>
+                            <button type="reset" class="btn btn-secondary">Limpar</button>
+                        </div>
+                    </form>
+
+                    <div class="scan-progress" id="scan-progress">
+                        <h3 class="card-title">Análise em Andamento</h3>
+                        <p class="card-description">Aguarde enquanto realizamos a análise da sua rede. Isso pode levar alguns minutos.</p>
+                        
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="progress-bar"></div>
+                        </div>
+                        <div class="progress-status">
+                            <span id="progress-percentage">0%</span>
+                            <span id="progress-stage">Inicializando...</span>
+                        </div>
+                    </div>
+
+                    <div class="scan-results" id="scan-results">
+                        <h3 class="card-title">Resultados da Análise</h3>
+                        
+                        <div class="tabs">
+                            <div class="tab active" data-tab="summary">Resumo</div>
+                            <div class="tab" data-tab="vulnerabilities">Vulnerabilidades</div>
+                            <div class="tab" data-tab="assets">Mapa de Ativos</div>
+                            <div class="tab" data-tab="recommendations">Recomendações</div>
+                        </div>
+
+                        <div class="tab-content active" id="summary-tab">
+                            <div class="results-summary">
+                                <div class="summary-card summary-card-critical">
+                                    <div class="summary-card-title">Vulnerabilidades Críticas</div>
+                                    <div class="summary-card-value">3</div>
+                                </div>
+                                <div class="summary-card summary-card-high">
+                                    <div class="summary-card-title">Vulnerabilidades Altas</div>
+                                    <div class="summary-card-value">7</div>
+                                </div>
+                                <div class="summary-card summary-card-medium">
+                                    <div class="summary-card-title">Vulnerabilidades Médias</div>
+                                    <div class="summary-card-value">12</div>
+                                </div>
+                                <div class="summary-card summary-card-low">
+                                    <div class="summary-card-title">Vulnerabilidades Baixas</div>
+                                    <div class="summary-card-value">18</div>
+                                </div>
+                            </div>
+
+                            <div class="chart-container" id="summary-chart">
+                                <!-- Chart will be rendered here -->
+                            </div>
+
+                            <h4 class="card-title">Dispositivos Detectados</h4>
+                            <div class="results-summary">
+                                <div class="summary-card">
+                                    <div class="summary-card-title">Total de Dispositivos</div>
+                                    <div class="summary-card-value">24</div>
+                                </div>
+                                <div class="summary-card">
+                                    <div class="summary-card-title">Servidores</div>
+                                    <div class="summary-card-value">5</div>
+                                </div>
+                                <div class="summary-card">
+                                    <div class="summary-card-title">Estações de Trabalho</div>
+                                    <div class="summary-card-value">12</div>
+                                </div>
+                                <div class="summary-card">
+                                    <div class="summary-card-title">Dispositivos IoT</div>
+                                    <div class="summary-card-value">7</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-content" id="vulnerabilities-tab">
+                            <div class="vulnerability-list">
+                                <div class="vulnerability-item">
+                                    <div class="vulnerability-header">
+                                        <div class="vulnerability-title">CVE-2021-44228 (Log4Shell)</div>
+                                        <div class="vulnerability-severity severity-critical">Crítico</div>
+                                    </div>
+                                    <div class="vulnerability-details">
+                                        <p>Vulnerabilidade de execução remota de código no Apache Log4j. Afeta múltiplos servidores em sua rede.</p>
+                                        <p><strong>Dispositivos afetados:</strong> 192.168.1.5, 192.168.1.8 (Servidores de Aplicação)</p>
+                                    </div>
+                                    <div class="vulnerability-actions">
+                                        <button class="btn btn-primary btn-sm">Ver Detalhes</button>
+                                        <button class="btn btn-secondary btn-sm">Ignorar</button>
+                                    </div>
+                                </div>
+
+                                <div class="vulnerability-item">
+                                    <div class="vulnerability-header">
+                                        <div class="vulnerability-title">Porta SMB (445) Aberta</div>
+                                        <div class="vulnerability-severity severity-high">Alto</div>
+                                    </div>
+                                    <div class="vulnerability-details">
+                                        <p>Serviço SMB exposto à rede. Pode ser explorado para acesso não autorizado a compartilhamentos de arquivos.</p>
+                                        <p><strong>Dispositivos afetados:</strong> 192.168.1.10, 192.168.1.15, 192.168.1.22</p>
+                                    </div>
+                                    <div class="vulnerability-actions">
+                                        <button class="btn btn-primary btn-sm">Ver Detalhes</button>
+                                        <button class="btn btn-secondary btn-sm">Ignorar</button>
+                                    </div>
+                                </div>
+
+                                <div class="vulnerability-item">
+                                    <div class="vulnerability-header">
+                                        <div class="vulnerability-title">Firmware Desatualizado em Dispositivos IoT</div>
+                                        <div class="vulnerability-severity severity-medium">Médio</div>
+                                    </div>
+                                    <div class="vulnerability-details">
+                                        <p>Múltiplos dispositivos IoT estão executando versões desatualizadas de firmware com vulnerabilidades conhecidas.</p>
+                                        <p><strong>Dispositivos afetados:</strong> 192.168.1.30, 192.168.1.31, 192.168.1.32 (Câmeras IP)</p>
+                                    </div>
+                                    <div class="vulnerability-actions">
+                                        <button class="btn btn-primary btn-sm">Ver Detalhes</button>
+                                        <button class="btn btn-secondary btn-sm">Ignorar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-content" id="assets-tab">
+                            <div class="asset-map" id="asset-map">
+                                <!-- Asset map will be rendered here -->
+                            </div>
+                            <h4 class="card-title">Lista de Ativos</h4>
+                            <div class="vulnerability-list">
+                                <div class="vulnerability-item">
+                                    <div class="vulnerability-header">
+                                        <div class="vulnerability-title">Servidor de Aplicação (192.168.1.5)</div>
+                                        <div class="vulnerability-severity severity-critical">3 Críticas</div>
+                                    </div>
+                                    <div class="vulnerability-details">
+                                        <p><strong>Sistema:</strong> Ubuntu 20.04 LTS</p>
+                                        <p><strong>Serviços:</strong> HTTP (80), HTTPS (443), SSH (22)</p>
+                                        <p><strong>Status:</strong> Online</p>
+                                    </div>
+                                    <div class="vulnerability-actions">
+                                        <button class="btn btn-primary btn-sm">Ver Detalhes</button>
+                                    </div>
+                                </div>
+
+                                <div class="vulnerability-item">
+                                    <div class="vulnerability-header">
+                                        <div class="vulnerability-title">Roteador Principal (192.168.1.1)</div>
+                                        <div class="vulnerability-severity severity-high">2 Altas</div>
+                                    </div>
+                                    <div class="vulnerability-details">
+                                        <p><strong>Fabricante:</strong> Cisco</p>
+                                        <p><strong>Firmware:</strong> v15.2</p>
+                                        <p><strong>Portas abertas:</strong> HTTP (80), HTTPS (443), Telnet (23)</p>
+                                    </div>
+                                    <div class="vulnerability-actions">
+                                        <button class="btn btn-primary btn-sm">Ver Detalhes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-content" id="recommendations-tab">
+                            <div class="vulnerability-list">
+                                <div class="vulnerability-item">
+                                    <div class="vulnerability-header">
+                                        <div class="vulnerability-title">Atualizar Apache Log4j</div>
+                                        <div class="vulnerability-severity severity-critical">Crítico</div>
+                                    </div>
+                                    <div class="vulnerability-details">
+                                        <p>Atualize o Apache Log4j para a versão 2.17.0 ou superior em todos os servidores afetados para mitigar a vulnerabilidade Log4Shell (CVE-2021-44228).</p>
+                                        <p><strong>Dispositivos afetados:</strong> 192.168.1.5, 192.168.1.8</p>
+                                    </div>
+                                    <div class="vulnerability-actions">
+                                        <button class="btn btn-primary btn-sm">Marcar como Resolvido</button>
+                                    </div>
+                                </div>
+
+                                <div class="vulnerability-item">
+                                    <div class="vulnerability-header">
+                                        <div class="vulnerability-title">Configurar Firewall para Porta SMB</div>
+                                        <div class="vulnerability-severity severity-high">Alto</div>
+                                    </div>
+                                    <div class="vulnerability-details">
+                                        <p>Restrinja o acesso à porta SMB (445) apenas para IPs confiáveis. Configure regras de firewall para bloquear o acesso externo a esta porta.</p>
+                                        <p><strong>Dispositivos afetados:</strong> 192.168.1.10, 192.168.1.15, 192.168.1.22</p>
+                                    </div>
+                                    <div class="vulnerability-actions">
+                                        <button class="btn btn-primary btn-sm">Marcar como Resolvido</button>
+                                    </div>
+                                </div>
+
+                                <div class="vulnerability-item">
+                                    <div class="vulnerability-header">
+                                        <div class="vulnerability-title">Atualizar Firmware de Dispositivos IoT</div>
+                                        <div class="vulnerability-severity severity-medium">Médio</div>
+                                    </div>
+                                    <div class="vulnerability-details">
+                                        <p>Atualize o firmware das câmeras IP para as versões mais recentes disponibilizadas pelo fabricante.</p>
+                                        <p><strong>Dispositivos afetados:</strong> 192.168.1.30, 192.168.1.31, 192.168.1.32</p>
+                                    </div>
+                                    <div class="vulnerability-actions">
+                                        <button class="btn btn-primary btn-sm">Marcar como Resolvido</button>
+                                    </div>
+                                </div>
+
+                                <div class="vulnerability-item">
+                                    <div class="vulnerability-header">
+                                        <div class="vulnerability-title">Implementar Segmentação de Rede</div>
+                                        <div class="vulnerability-severity severity-medium">Médio</div>
+                                    </div>
+                                    <div class="vulnerability-details">
+                                        <p>Implemente VLANs para separar dispositivos IoT da rede corporativa principal. Isso limitará o impacto potencial de uma violação em dispositivos IoT menos seguros.</p>
+                                    </div>
+                                    <div class="vulnerability-actions">
+                                        <button class="btn btn-primary btn-sm">Marcar como Resolvido</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Login functionality
+            const loginPage = document.getElementById('login-page');
+            const dashboardPage = document.getElementById('dashboard-page');
+            const loginForm = document.getElementById('login-form');
+            const loginAlert = document.getElementById('login-alert');
+            
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                // Simple validation - in a real app, this would be a server request
+                if (email && password) {
+                    // Simulate loading
+                    loginAlert.style.display = 'none';
+                    loginPage.style.display = 'none';
+                    dashboardPage.style.display = 'block';
+                } else {
+                    loginAlert.style.display = 'flex';
+                }
+            });
+            
+            // Logout functionality
+            const logoutButton = document.getElementById('logout-button');
+            logoutButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                dashboardPage.style.display = 'none';
+                loginPage.style.display = 'flex';
+                document.getElementById('email').value = '';
+                document.getElementById('password').value = '';
+            });
+            
+            // User dropdown menu
+            const userButton = document.getElementById('user-button');
+            const userDropdown = document.getElementById('user-dropdown');
+            
+            userButton.addEventListener('click', function() {
+                userDropdown.classList.toggle('active');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!userButton.contains(e.target) && !userDropdown.contains(e.target)) {
+                    userDropdown.classList.remove('active');
+                }
+            });
+
+            // Scan options selection
+            const scanOptions = document.querySelectorAll('.scan-option');
+            scanOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    scanOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+
+            // Form submission
+            const scanForm = document.getElementById('scan-form');
+            const scanProgress = document.getElementById('scan-progress');
+            const scanResults = document.getElementById('scan-results');
+            const progressBar = document.getElementById('progress-bar');
+            const progressPercentage = document.getElementById('progress-percentage');
+            const progressStage = document.getElementById('progress-stage');
+            const loadingOverlay = document.querySelector('.loading-overlay');
+
+            scanForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validate IP address
+                const ipAddress = document.getElementById('ip-address').value;
+                const subnetMask = document.getElementById('subnet-mask').value;
+                
+                if (!validateIPAddress(ipAddress)) {
+                    alert('Por favor, insira um endereço IP válido.');
+                    return;
+                }
+                
+                if (!validateSubnetMask(subnetMask)) {
+                    alert('Por favor, insira uma máscara de sub-rede válida.');
+                    return;
+                }
+                
+                // Show progress
+                scanProgress.style.display = 'block';
+                scanForm.style.display = 'none';
+                
+                // Simulate scan progress
+                let progress = 0;
+                const stages = [
+                    'Inicializando scanner...',
+                    'Descobrindo dispositivos na rede...',
+                    'Identificando sistemas operacionais...',
+                    'Detectando portas abertas...',
+                    'Identificando serviços ativos...',
+                    'Verificando vulnerabilidades conhecidas...',
+                    'Analisando dispositivos IoT...',
+                    'Verificando configurações de segurança...',
+                    'Gerando relatório...',
+                    'Concluído!'
+                ];
+                
+                const interval = setInterval(function() {
+                    progress += Math.random() * 5;
+                    if (progress > 100) progress = 100;
+                    
+                    progressBar.style.width = progress + '%';
+                    progressPercentage.textContent = Math.round(progress) + '%';
+                    
+                    const stageIndex = Math.min(Math.floor(progress / 10), stages.length - 1);
+                    progressStage.textContent = stages[stageIndex];
+                    
+                    if (progress === 100) {
+                        clearInterval(interval);
+                        setTimeout(function() {
+                            scanProgress.style.display = 'none';
+                            scanResults.style.display = 'block';
+                            renderAssetMap();
+                            renderSummaryChart();
+                        }, 1000);
+                    }
+                }, 300);
+            });
+
+            // Tab switching
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show corresponding content
+                    const tabContents = document.querySelectorAll('.tab-content');
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    document.getElementById(tabId + '-tab').classList.add('active');
+                    
+                    // Render specific content if needed
+                    if (tabId === 'assets') {
+                        renderAssetMap();
+                    } else if (tabId === 'summary') {
+                        renderSummaryChart();
+                    }
+                });
+            });
+
+            // Validate IP address
+            function validateIPAddress(ip) {
+                const regex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+                return regex.test(ip);
+            }
+            
+            // Validate subnet mask
+            function validateSubnetMask(mask) {
+                // Accept both formats: 255.255.255.0 or /24
+                const cidrRegex = /^\/([1-9]|[1-2][0-9]|3[0-2])$/;
+                const ipRegex = /^(255|254|252|248|240|224|192|128|0)\.(?:(255|254|252|248|240|224|192|128|0)\.)?(?:(255|254|252|248|240|224|192|128|0)\.)?(?:(255|254|252|248|240|224|192|128|0))$/;
+                
+                return cidrRegex.test(mask) || ipRegex.test(mask);
+            }
+
+            // Render asset map
+            function renderAssetMap() {
+                const assetMap = document.getElementById('asset-map');
+                if (!assetMap) return;
+                
+                // Clear previous content
+                assetMap.innerHTML = '';
+                
+                // Define assets
+                const assets = [
+                    { id: 1, type: 'router', x: 50, y: 50, label: 'R1', ip: '192.168.1.1', name: 'Roteador Principal' },
+                    { id: 2, type: 'server', x: 150, y: 100, label: 'S1', ip: '192.168.1.5', name: 'Servidor Web' },
+                    { id: 3, type: 'server', x: 250, y: 100, label: 'S2', ip: '192.168.1.8', name: 'Servidor de Banco de Dados' },
+                    { id: 4, type: 'workstation', x: 150, y: 200, label: 'W1', ip: '192.168.1.10', name: 'Estação de Trabalho 1' },
+                    { id: 5, type: 'workstation', x: 250, y: 200, label: 'W2', ip: '192.168.1.15', name: 'Estação de Trabalho 2' },
+                    { id: 6, type: 'workstation', x: 350, y: 200, label: 'W3', ip: '192.168.1.22', name: 'Estação de Trabalho 3' },
+                    { id: 7, type: 'iot', x: 150, y: 300, label: 'I1', ip: '192.168.1.30', name: 'Câmera IP 1' },
+                    { id: 8, type: 'iot', x: 250, y: 300, label: 'I2', ip: '192.168.1.31', name: 'Câmera IP 2' },
+                    { id: 9, type: 'iot', x: 350, y: 300, label: 'I3', ip: '192.168.1.32', name: 'Câmera IP 3' }
+                ];
+                
+                // Define connections
+                const connections = [
+                    { from: 1, to: 2 },
+                    { from: 1, to: 3 },
+                    { from: 1, to: 4 },
+                    { from: 1, to: 5 },
+                    { from: 1, to: 6 },
+                    { from: 1, to: 7 },
+                    { from: 1, to: 8 },
+                    { from: 1, to: 9 }
+                ];
+                
+                // Create connections
+                connections.forEach(conn => {
+                    const fromAsset = assets.find(a => a.id === conn.from);
+                    const toAsset = assets.find(a => a.id === conn.to);
+                    
+                    if (fromAsset && toAsset) {
+                        const dx = toAsset.x - fromAsset.x;
+                        const dy = toAsset.y - fromAsset.y;
+                        const length = Math.sqrt(dx * dx + dy * dy);
+                        const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+                        
+                        const link = document.createElement('div');
+                        link.className = 'asset-link';
+                        link.style.width = length + 'px';
+                        link.style.left = fromAsset.x + 20 + 'px';
+                        link.style.top = fromAsset.y + 20 + 'px';
+                        link.style.transform = `rotate(${angle}deg)`;
+                        
+                        assetMap.appendChild(link);
+                    }
+                });
+                
+                // Create nodes
+                assets.forEach(asset => {
+                    const node = document.createElement('div');
+                    node.className = `asset-node ${asset.type}`;
+                    node.style.left = asset.x + 'px';
+                    node.style.top = asset.y + 'px';
+                    node.textContent = asset.label;
+                    node.setAttribute('data-ip', asset.ip);
+                    node.setAttribute('data-name', asset.name);
+                    node.setAttribute('data-type', asset.type);
+                    
+                    node.addEventListener('mouseover', function(e) {
+                        const tooltip = document.createElement('div');
+                        tooltip.className = 'asset-tooltip';
+                        tooltip.innerHTML = `
+                            <div class="asset-tooltip-title">${asset.name} (${asset.ip})</div>
+                            <div class="asset-tooltip-info">Tipo: ${getAssetTypeName(asset.type)}</div>
+                            <div class="asset-tooltip-info">Status: Online</div>
+                        `;
+                        
+                        tooltip.style.left = (asset.x + 50) + 'px';
+                        tooltip.style.top = (asset.y) + 'px';
+                        
+                        assetMap.appendChild(tooltip);
+                        this.tooltip = tooltip;
+                        tooltip.style.display = 'block';
+                    });
+                    
+                    node.addEventListener('mouseout', function() {
+                        if (this.tooltip) {
+                            this.tooltip.remove();
+                        }
+                    });
+                    
+                    assetMap.appendChild(node);
+                });
+            }
+            
+            function getAssetTypeName(type) {
+                switch(type) {
+                    case 'router': return 'Roteador';
+                    case 'server': return 'Servidor';
+                    case 'workstation': return 'Estação de Trabalho';
+                    case 'iot': return 'Dispositivo IoT';
+                    default: return type;
+                }
+            }
+
+            // Render summary chart (simplified version)
+            function renderSummaryChart() {
+                const chartContainer = document.getElementById('summary-chart');
+                if (!chartContainer) return;
+                
+                // Clear previous content
+                chartContainer.innerHTML = '';
+                
+                // Create a simple bar chart
+                const data = [
+                    { label: 'Crítico', value: 3, color: '#dc2626' },
+                    { label: 'Alto', value: 7, color: '#f59e0b' },
+                    { label: 'Médio', value: 12, color: '#0ea5e9' },
+                    { label: 'Baixo', value: 18, color: '#16a34a' }
+                ];
+                
+                const maxValue = Math.max(...data.map(d => d.value));
+                const barWidth = 100 / data.length;
+                
+                const chart = document.createElement('div');
+                chart.style.display = 'flex';
+                chart.style.alignItems = 'flex-end';
+                chart.style.height = '250px';
+                chart.style.width = '100%';
+                chart.style.padding = '20px';
+                
+                data.forEach(item => {
+                    const barContainer = document.createElement('div');
+                    barContainer.style.flex = '1';
+                    barContainer.style.display = 'flex';
+                    barContainer.style.flexDirection = 'column';
+                    barContainer.style.alignItems = 'center';
+                    barContainer.style.textAlign = 'center';
+                    
+                    const bar = document.createElement('div');
+                    const height = (item.value / maxValue) * 200;
+                    bar.style.width = '40px';
+                    bar.style.height = height + 'px';
+                    bar.style.backgroundColor = item.color;
+                    bar.style.borderRadius = '4px 4px 0 0';
+                    
+                    const label = document.createElement('div');
+                    label.textContent = item.label;
+                    label.style.marginTop = '10px';
+                    label.style.fontWeight = '500';
+                    
+                    const value = document.createElement('div');
+                    value.textContent = item.value;
+                    value.style.marginTop = '5px';
+                    value.style.fontWeight = '700';
+                    
+                    barContainer.appendChild(bar);
+                    barContainer.appendChild(label);
+                    barContainer.appendChild(value);
+                    chart.appendChild(barContainer);
+                });
+                
+                chartContainer.appendChild(chart);
+            }
+        });
+    </script>
+</body>
+</html>
