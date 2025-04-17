@@ -339,17 +339,27 @@
       const password = e.target.password.value;
   
       try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        
-        window.location.href = "index.html"; // Redirecione para onde quiser
-      }  catch (error) {
-        errorDiv.textContent = "Erro ao fazer login. Verifique seu e-mail e senha e tente novamente.";
-        errorDiv.classList.add("show");
+  const userCredential = await signInWithEmailAndPassword(auth, email, password);
+  const user = userCredential.user;
 
-        setTimeout(() => {
-          errorDiv.classList.remove("show");
-        }, 5000);
-      }
+  if (user.emailVerified) {
+    window.location.href = "scan.html"; // redireciona se email estiver verificado
+  } else {
+    errorDiv.textContent = "Por favor, verifique seu e-mail antes de fazer login.";
+    errorDiv.classList.add("show");
+
+    setTimeout(() => {
+      errorDiv.classList.remove("show");
+    }, 5000);
+  }
+} catch (error) {
+  errorDiv.textContent = "Erro ao fazer login. Verifique seu e-mail e senha e tente novamente.";
+  errorDiv.classList.add("show");
+
+  setTimeout(() => {
+    errorDiv.classList.remove("show");
+  }, 5000);
+}
     });
   </script>
   

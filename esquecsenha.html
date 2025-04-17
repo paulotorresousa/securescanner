@@ -238,33 +238,66 @@
         </div>
     </div>
 
-    <script>
-        document.getElementById('reset-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            const email = document.getElementById('email').value;
-            
-            if (email) {
-                // Hide any existing error message
-                document.getElementById('error-message').style.display = 'none';
-                
-                // Show success message
-                document.getElementById('success-message').style.display = 'block';
-                
-                // In a real application, you would send a request to your server
-                // to handle the password reset process
-                
-                // Clear the form
-                document.getElementById('email').value = '';
-            } else {
-                document.getElementById('error-message').style.display = 'block';
-                document.getElementById('success-message').style.display = 'none';
-            }
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+        import { getAuth, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+    
+        const firebaseConfig = {
+          apiKey: "AIzaSyAnA0X3VK1jW4Gv2lkJ_Cp4g7jL1hQ36u4",
+          authDomain: "scanner-c65ce.firebaseapp.com",
+          projectId: "scanner-c65ce",
+          storageBucket: "scanner-c65ce.firebasestorage.app",
+          messagingSenderId: "731199717476",
+          appId: "1:731199717476:web:7d03c2f4acf2f06d5d5f71",
+          measurementId: "G-R6QW0YRC58"
+        };
+    
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth(app);
+    
+        document.getElementById('reset-form').addEventListener('submit', function (event) {
+          event.preventDefault();
+    
+          const emailInput = document.getElementById('email');
+          const email = emailInput.value.trim();
+          const successMsg = document.getElementById('success-message');
+          const errorMsg = document.getElementById('error-message');
+    
+          successMsg.style.display = 'none';
+          errorMsg.style.display = 'none';
+    
+          if (!email || !email.includes('@')) {
+            errorMsg.textContent = 'Digite um e-mail válido.';
+            errorMsg.style.display = 'block';
+            return;
+          }
+    
+          sendPasswordResetEmail(auth, email)
+            .then(() => {
+              successMsg.style.display = 'block';
+              emailInput.value = '';
+            })
+            .catch(error => {
+              console.error(error);
+              let msg = 'Ocorreu um erro. Tente novamente.';
+    
+              if (error.code === 'auth/user-not-found') {
+                msg = 'E-mail não encontrado. Verifique se o endereço está correto.';
+              } else if (error.code === 'auth/invalid-email') {
+                msg = 'E-mail inválido.';
+              }
+    
+              errorMsg.textContent = msg;
+              errorMsg.style.display = 'block';
+            });
         });
-
-        document.getElementById('back-button').addEventListener('click', function() {
-            window.location.href = 'login.html';
+    
+        document.getElementById('back-button').addEventListener('click', function () {
+          window.location.href = 'index.html';
         });
-    </script>
+      </script>
+      
 </body>
 </html>
