@@ -271,10 +271,18 @@
   </div>
 
   <script type="module">
+    // Firebase SDKs
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      GoogleAuthProvider,
+      GithubAuthProvider,
+      signInWithPopup
+    } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+  
+    // Configuração do Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyAnA0X3VK1jW4Gv2lkJ_Cp4g7jL1hQ36u4",
       authDomain: "scanner-c65ce.firebaseapp.com",
@@ -284,45 +292,57 @@
       appId: "1:731199717476:web:7d03c2f4acf2f06d5d5f71",
       measurementId: "G-R6QW0YRC58"
     };
-
+  
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const auth = getAuth(app);
-
+  
     const loginForm = document.getElementById("loginForm");
     const errorDiv = document.getElementById("login-error-message");
-
+  
+    // Login com Email/Senha
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      errorDiv.classList.remove("show");
-
+  
       const email = e.target.email.value;
       const password = e.target.password.value;
-
+  
       try {
-  const userCredential = await signInWithEmailAndPassword(auth, email, password);
-  const user = userCredential.user;
-
-  if (user.emailVerified) {
-    window.location.href = "scan.html"; // redireciona se email estiver verificado
-  } else {
-    errorDiv.textContent = "Por favor, verifique seu e-mail antes de fazer login.";
-    errorDiv.classList.add("show");
-
-    setTimeout(() => {
-      errorDiv.classList.remove("show");
-    }, 5000);
-  }
-} catch (error) {
-  errorDiv.textContent = "Erro ao fazer login. Verifique seu e-mail e senha e tente novamente.";
-  errorDiv.classList.add("show");
-
-  setTimeout(() => {
-    errorDiv.classList.remove("show");
-  }, 5000);
-}
-
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+  
+        if (user.emailVerified) {
+          window.location.href = "scan.html";
+        } else {
+          showError("Por favor, verifique seu e-mail antes de fazer login.");
+        }
+      } catch (error) {
+        showError("Erro ao fazer login. Verifique seu e-mail e senha e tente novamente.");
+      }
     });
+  
+    // Função para exibir erros
+    function showError(message) {
+      errorDiv.textContent = message;
+      errorDiv.classList.add("show");
+      setTimeout(() => errorDiv.classList.remove("show"), 5000);
+    }
+  
+    // Login com Google
+    const googleButton = document.querySelector(".social-buttons button:nth-child(1)");
+    googleButton.addEventListener("click", async () => {
+      const provider = new GoogleAuthProvider();
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        window.location.href = "scan.html";
+      } catch (error) {
+        showError("Erro ao entrar com o Google.");
+      }
+    });
+  
+
   </script>
+  
 </body>
 </html>
