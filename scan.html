@@ -230,9 +230,7 @@
     z-index: 1000;
 }
 
-.dropdown:hover .dropdown-content {
-    display: block;
-}
+
 
 #dropdownContent p {
     margin: 0.25rem 0;
@@ -474,6 +472,21 @@
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+
+  const userDropdown = document.getElementById("userDropdown");
+  const dropdownContent = document.getElementById("dropdownContent");
+
+userDropdown.addEventListener("click", (event) => {
+  event.stopPropagation(); // impede que o clique feche o menu imediatamente
+  dropdownContent.style.display = 
+    dropdownContent.style.display === "block" ? "none" : "block";
+});
+
+document.addEventListener("click", (event) => {
+  if (!dropdownContent.contains(event.target) && event.target !== userDropdown) {
+    dropdownContent.style.display = "none";
+  }
+});
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
