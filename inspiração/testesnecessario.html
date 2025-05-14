@@ -1,518 +1,389 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SecureScanner - Sistema Integrado de Análise de Vulnerabilidades</title>
-    <style>
-        :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --secondary: #475569;
-            --info: #0ea5e9;
-            --light: #f8fafc;
-            --dark: #1e293b;
-            --gray-100: #f1f5f9;
-            --gray-200: #e2e8f0;
-            --gray-300: #cbd5e1;
-            --gray-400: #94a3b8;
-            --gray-500: #64748b;
-            --gray-600: #475569;
-            --gray-700: #334155;
-            --gray-800: #1e293b;
-            --gray-900: #0f172a;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SecureScanner Login</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@600;700&display=swap');
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            background-color: var(--gray-100);
-            color: var(--gray-800);
-            line-height: 1.6;
-        }
+    body {
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+    }
 
-        header {
-            background-color: var(--dark);
-            color: white;
-            padding: 1rem 0;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
+    .left-panel {
+      flex: 1;
+      background-color: #171f35;
+      color: white;
+      padding: 60px 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
 
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
+    .logo {
+      display: flex;
+      align-items: center;
+      margin-bottom: 40px;
+    }
 
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
+    .login-logo {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 1.5rem;
+            gap: 0.75rem;
+            font-size: 2rem;
             font-weight: 700;
+            margin-bottom: 2rem;
         }
 
-        .logo-icon {
-            width: 32px;
-            height: 32px;
+        .login-logo-icon {
+            width: 40px;
+            height: 40px;
             background-color: white;
-            color: blue;
+            color: var(--primary);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        nav {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        }
-        
-        nav ul {
-          display: flex;
-          list-style: none;
-          gap: 1.5rem;
-          margin: 0;
-          padding: 0;
-        }
-
-        nav a {
-            color: var(--gray-300);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        nav a:hover {
-            color: white;
-        }
-
-        nav a.active {
-            color: white;
-            position: relative;
-        }
-
-        nav a.active::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: #253563;
-        }
-
-        .main-content {
-            padding: 2rem 0;
-        }
-
-        .card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .card-header {
-            margin-bottom: 1.5rem;
-        }
-
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--gray-800);
-            margin-bottom: 0.5rem;
-        }
-
-        .card-description {
-            color: var(--gray-600);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--gray-700);
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--gray-300);
-            border-radius: 4px;
-            font-size: 1rem;
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        .form-hint {
-            margin-top: 0.5rem;
-            font-size: 0.875rem;
-            color: var(--gray-500);
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            font-size: 1rem;
-            font-weight: 500;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.1s;
-            border: none;
-        }
-
-        .btn:active {
-            transform: translateY(1px);
-        }
-
-        .btn-primary {
-            background-color: #171f35;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: #253563;
-        }
-        .dropdown {
-    position: relative;
-    display: inline-block;
+        .icon {
+  color: #2563eb;
 }
+    .left-panel h1 {
+      font-size: 32px;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
 
-.dropbtn {
-    background-color: transparent;
-    border: none;
-    color: var(--gray-300);
-    font-weight: 500;
-    cursor: pointer;
-    font-size: 1rem;
-}
+    .left-panel p {
+      font-size: 16px;
+      margin-bottom: 30px;
+      line-height: 1.5;
+    }
 
-.dropbtn:hover {
-    color: white;
-}
+    .features {
+      list-style: none;
+    }
 
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: white;
-    color: black;
-    min-width: 200px;
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    top: 120%;
-    right: 0;
-    z-index: 1000;
-}
-
-
-
-#dropdownContent p {
-    margin: 0.25rem 0;
-    font-size: 0.9rem;
-}
-
-#logoutButton {
-    margin-top: 0.5rem;
-    background-color: #e53e3e;
-    color: white;
-    border: none;
-    padding: 0.5rem;
-    width: 100%;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-#logoutButton:hover {
-    background-color: #c53030;
-}
-
-        .btn-secondary {
-            background-color: var(--gray-200);
-            color: var(--gray-700);
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--gray-300);
-        }
-
-        .btn-icon {
+    .login-feature {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
         }
 
-        .form-actions {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .scan-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .scan-option {
-            border: 1px solid var(--gray-300);
-            border-radius: 4px;
-            padding: 1rem;
-            cursor: pointer;
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-
-        .scan-option:hover {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        .scan-option.selected {
-            border-color: var(--primary);
-            background-color: rgba(37, 99, 235, 0.05);
-        }
-
-        .scan-option-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .scan-option-icon {
+        .login-feature-icon {
             width: 24px;
             height: 24px;
-            background-color: #171f35;
+            background-color: rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 0.875rem;
+            flex-shrink: 0;
         }
 
-        .scan-option-title {
-            font-weight: 600;
-            color: var(--gray-800);
+    .right-panel {
+      flex: 1;
+      background-color: #f9fafb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .alert {
+      padding: 12px;
+      margin-bottom: 16px;
+      border-radius: 8px;
+      font-weight: 500;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .alert.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .alert-danger {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    
+
+    .form-container {
+      width: 100%;
+      max-width: 400px;
+      background: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-container h2 {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .form-container p {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 24px;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 16px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color:  #171f35;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+            background-color:  #253563;
+            border-color:  #253563;
         }
 
-        .scan-option-description {
-            font-size: 0.875rem;
-            color: var(--gray-600);
-        }
+    .checkbox {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+    }
 
-       
+    .checkbox input {
+      margin-right: 8px;
+    }
 
-        
+    .separator {
+      text-align: center;
+      margin: 20px 0;
+      color: #9ca3af;
+    }
 
-        @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: 1rem;
-            }
+    .social-buttons {
+      display: flex;
+      gap: 10px;
+    }
 
-            nav ul {
-                gap: 1rem;
-            }
+    .social-buttons button {
+      flex: 1;
+      background-color: #f3f4f6;
+      color: #111827;
+    }
+    #google-login-btn {
+    background-color: #f3f4f6;
+    color: #111827;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+    .bottom-links {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+    }
 
-            .scan-options {
-                grid-template-columns: 1fr;
-            }
+    .bottom-links a {
+      color: #2563eb;
+      text-decoration: none;
+      margin-left: 4px;
+    }
 
-            .results-summary {
-                grid-template-columns: 1fr;
-            }
+    @media (max-width: 900px) {
+      body {
+        flex-direction: column;
+      }
 
-            .form-actions {
-                flex-direction: column;
-            }
+      .left-panel {
+        padding: 40px 30px;
+        text-align: center;
+        align-items: center;
+      }
 
-            .btn {
-                width: 100%;
-            }
-        }
-    </style>
+      .right-panel {
+        padding: 40px 20px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="loading-overlay">
-        <div class="spinner"></div>
+  <div class="left-panel">
+    <div class="login-logo">
+        <div class="login-logo-icon">
+            <svg class="icon"  xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M 8 1 a 2 2 0 0 1 2 2 v 4 H 6 V 3 a 2 2 0 0 1 2 -2 Z m 3 6 V 3 a 3 3 0 0 0 -6 0 v 4 a 2 2 0 0 0 -2 2 v 5 a 2 2 0 0 0 2 2 h 6 a 2 2 0 0 0 2 -2 V 9 a 2 2 0 0 0 -2 -2 Z"/>
+            </svg>
+        </div>
+        <span>SecureScanner</span>
     </div>
-
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <div class="logo-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
-                        </svg>
-                    </div>
-                    <span>SecureScanner</span>
-                </div>
-                <nav>
-                    <ul>
-                        <li><a href="#" class="active">Dashboard</a></li>
-                    </ul>
-                    <div class="dropdown">
-                      <button class="dropbtn" id="userDropdown">Perfil ▾</button>
-                      <div class="dropdown-content" id="dropdownContent">
-                        <p id="userName">Nome do Usuário</p>
-                        <p id="userEmail">email@exemplo.com</p>
-                        <button id="logoutButton">Sair</button>
-                    </div>
-                </nav>
+    <h1>Análise de Vulnerabilidades Inteligente</h1>
+    <p>Identifique, analise e corrija vulnerabilidades em sua infraestrutura de TI, OT e IoT com nossa plataforma avançada de segurança.</p>
+    <ul class="features">
+        <li class="login-feature">
+            <div class="login-feature-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+                </svg>
             </div>
-        </div>
-    </header>
-
-    <main class="main-content">
-        <div class="container">
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">Análise de Vulnerabilidades</h2>
-                    <p class="card-description">Configure e inicie uma nova análise de vulnerabilidades para seu ambiente de rede.</p>
-                </div>
-
-                <form id="scan-form">
-                    <div class="form-group">
-                        <label for="ip-address" class="form-label">Endereço IP</label>
-                        <input type="text" id="ip-address" class="form-input" placeholder="Ex: 192.168.1.1" required>
-                        <p class="form-hint">Insira o endereço IP da rede que deseja analisar.</p>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="subnet-mask" class="form-label">Máscara de Sub-rede</label>
-                        <input type="text" id="subnet-mask" class="form-input" placeholder="Ex: 255.255.255.0 ou /24" required>
-                        <p class="form-hint">Insira a máscara de sub-rede para determinar o escopo da análise.</p>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Opções de Análise</label>
-                        <div class="scan-options">
-                            <div class="scan-option selected" data-option="quick">
-                                <div class="scan-option-header">
-                                    <div class="scan-option-icon">R</div>
-                                    <div class="scan-option-title">Análise Rápida</div>
-                                </div>
-                                <p class="scan-option-description">Verifica portas comuns e vulnerabilidades conhecidas. Duração estimada: 5-10 minutos.</p>
-                            </div>
-
-                            <div class="scan-option" data-option="standard">
-                                <div class="scan-option-header">
-                                    <div class="scan-option-icon">P</div>
-                                    <div class="scan-option-title">Análise Padrão</div>
-                                </div>
-                                <p class="scan-option-description">Verifica todas as portas e serviços ativos. Duração estimada: 15-30 minutos.</p>
-                            </div>
-
-                            <div class="scan-option" data-option="comprehensive">
-                                <div class="scan-option-header">
-                                    <div class="scan-option-icon">C</div>
-                                    <div class="scan-option-title">Análise Completa</div>
-                                </div>
-                                <p class="scan-option-description">Análise detalhada incluindo verificações de IoT e OT. Duração estimada: 30-60 minutos.</p>
-                            </div>
-
-                           
-                        </div>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary btn-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
-                            </svg>
-                            Iniciar Análise
-                        </button>
-                        <button type="reset" class="btn btn-secondary">Limpar</button>
-                    </div>
-                </form>        
+            <span>Mapeamento automático de ativos de TI, OT e IoT</span>
+        </li>
+        <li class="login-feature">
+            <div class="login-feature-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+                </svg>
             </div>
-        </div>
-    </main>
+            <span>Detecção de portas abertas e serviços ativos em tempo real</span>
+        </li>
+        <li class="login-feature">
+            <div class="login-feature-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+                </svg>
+            </div>
+            <span>Avaliações não invasivas de impacto potencial</span>
+        </li>
+        <li class="login-feature">
+            <div class="login-feature-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+                </svg>
+            </div>
+            <span>Recomendações personalizadas para mitigação de riscos</span>
+        </li>
+        <li class="login-feature">
+            <div class="login-feature-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+                </svg>
+            </div>
+            <span>Visualização intuitiva</span>
+        </li>
 
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    </ul>
+  </div>
 
+  <div class="right-panel">
+    <form id="loginForm" class="form-container">
+      <h2>Bem-vindo ao SecureScanner</h2>
+      <p>Faça login para acessar sua conta</p>
+
+      <div id="login-error-message" class="alert alert-danger"></div>
+      <input type="email" name="email" placeholder="Email" required />
+      <input type="password" name="password" placeholder="Senha" required />
+      
+      <button type="submit">Entrar</button>
+      
+      <div class="social-buttons">
+        <button id="google-login-btn">
+          <img src="" alt="">Entrar com Google</button>
+      
+      </div>
+      <div class="bottom-links">
+        <p>Esqueceu sua senha? <a href="esquecsenha.html">Recuperar senha</a></p>
+        <p>Não tem uma conta? <a href="cadastro.html">Criar conta</a></p>
+      </div>
+    </form>
+  </div>
+
+<script type="module">
+  // Firebase SDKs
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+  import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+
+  // Sua configuração do Firebase
   const firebaseConfig = {
-      apiKey: "AIzaSyAnA0X3VK1jW4Gv2lkJ_Cp4g7jL1hQ36u4",
-      authDomain: "scanner-c65ce.firebaseapp.com",
-      projectId: "scanner-c65ce",
-      storageBucket: "scanner-c65ce.firebasestorage.app",
-      messagingSenderId: "731199717476",
-      appId: "1:731199717476:web:7d03c2f4acf2f06d5d5f71",
-      measurementId: "G-R6QW0YRC58"
-    };
+    apiKey: "AIzaSyAnA0X3VK1jW4Gv2lkJ_Cp4g7jL1hQ36u4",
+    authDomain: "scanner-c65ce.firebaseapp.com",
+    projectId: "scanner-c65ce",
+    storageBucket: "scanner-c65ce.firebasestorage.app",
+    messagingSenderId: "731199717476",
+    appId: "1:731199717476:web:7d03c2f4acf2f06d5d5f71",
+    measurementId: "G-R6QW0YRC58"
+  };
 
+  // Inicialização
   const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
   const auth = getAuth(app);
 
-  const userDropdown = document.getElementById("userDropdown");
-  const dropdownContent = document.getElementById("dropdownContent");
+  // Lógica de login com e-mail/senha
+  const loginForm = document.getElementById("loginForm");
+  const errorDiv = document.getElementById("login-error-message");
 
-userDropdown.addEventListener("click", (event) => {
-  event.stopPropagation(); // impede que o clique feche o menu imediatamente
-  dropdownContent.style.display = 
-    dropdownContent.style.display === "block" ? "none" : "block";
-});
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
 
-document.addEventListener("click", (event) => {
-  if (!dropdownContent.contains(event.target) && event.target !== userDropdown) {
-    dropdownContent.style.display = "none";
-  }
-});
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
 
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      document.getElementById('userName').textContent = user.displayName || "Usuário";
-      document.getElementById('userEmail').textContent = user.email;
-    } else {
-      window.location.href = 'index.html';
+      if (user.emailVerified) {
+        window.location.href = "scan.html";
+      } else {
+        showError("Por favor, verifique seu e-mail antes de fazer login.");
+      }
+    } catch (error) {
+      showError("Erro ao fazer login. Verifique seu e-mail e senha e tente novamente.");
     }
   });
 
-  document.getElementById("logoutButton").addEventListener("click", () => {
-    signOut(auth).then(() => {
-      window.location.href = 'index.html';
-    });
+  // Função de login com Google
+  const googleBtn = document.getElementById("google-login-btn");
+  googleBtn.addEventListener("click", async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      window.location.href = "scan.html";
+    } catch (error) {
+      showError("Erro ao entrar com o Google.");
+      console.error(error);
+    }
   });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // Scan options selection
-            const scanOptions = document.querySelectorAll('.scan-option');
-            scanOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    scanOptions.forEach(opt => opt.classList.remove('selected'));
-                    this.classList.add('selected');
-                });
-            });
-         });
-    </script>
-</body>
+  // Função para mostrar mensagens de erro
+  function showError(message) {
+    errorDiv.textContent = message;
+    errorDiv.classList.add("show");
+    setTimeout(() => {
+      errorDiv.classList.remove("show");
+    }, 5000);
+  }
+</script>
+
+  
+</body> 
 </html>

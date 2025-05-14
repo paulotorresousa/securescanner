@@ -196,7 +196,16 @@
       background-color: #f3f4f6;
       color: #111827;
     }
-
+    #google-login-btn {
+    background-color: #f3f4f6;
+    color: #111827;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  }
     .bottom-links {
       text-align: center;
       margin-top: 20px;
@@ -295,7 +304,8 @@
       <button type="submit">Entrar</button>
       
       <div class="social-buttons">
-       
+        <button id="google-login-btn">
+          <img src="" alt="">Entrar com Google</button>
       
       </div>
       <div class="bottom-links">
@@ -304,61 +314,76 @@
       </div>
     </form>
   </div>
-  <script type="module">
-    // Firebase SDKs
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-  
-    // Sua configuração do Firebase
-    const firebaseConfig = {
-      apiKey: "AIzaSyAnA0X3VK1jW4Gv2lkJ_Cp4g7jL1hQ36u4",
-      authDomain: "scanner-c65ce.firebaseapp.com",
-      projectId: "scanner-c65ce",
-      storageBucket: "scanner-c65ce.firebasestorage.app",
-      messagingSenderId: "731199717476",
-      appId: "1:731199717476:web:7d03c2f4acf2f06d5d5f71",
-      measurementId: "G-R6QW0YRC58"
-    };
-  
-    // Inicialização
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const auth = getAuth(app);
-  
-    // Lógica de login
-    const loginForm = document.getElementById("loginForm");
-    const errorDiv = document.getElementById("login-error-message");
-    loginForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-  
-      const email = e.target.email.value;
-      const password = e.target.password.value;
-  
-      try {
-  const userCredential = await signInWithEmailAndPassword(auth, email, password);
-  const user = userCredential.user;
 
-  if (user.emailVerified) {
-    window.location.href = "scan.html"; // redireciona se email estiver verificado
-  } else {
-    errorDiv.textContent = "Por favor, verifique seu e-mail antes de fazer login.";
+<script type="module">
+  // Firebase SDKs
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+  import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+
+  // Sua configuração do Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyAnA0X3VK1jW4Gv2lkJ_Cp4g7jL1hQ36u4",
+    authDomain: "scanner-c65ce.firebaseapp.com",
+    projectId: "scanner-c65ce",
+    storageBucket: "scanner-c65ce.firebasestorage.app",
+    messagingSenderId: "731199717476",
+    appId: "1:731199717476:web:7d03c2f4acf2f06d5d5f71",
+    measurementId: "G-R6QW0YRC58"
+  };
+
+  // Inicialização
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const auth = getAuth(app);
+
+  // Lógica de login com e-mail/senha
+  const loginForm = document.getElementById("loginForm");
+  const errorDiv = document.getElementById("login-error-message");
+
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      if (user.emailVerified) {
+        window.location.href = "scan.html";
+      } else {
+        showError("Por favor, verifique seu e-mail antes de fazer login.");
+      }
+    } catch (error) {
+      showError("Erro ao fazer login. Verifique seu e-mail e senha e tente novamente.");
+    }
+  });
+
+  // Função de login com Google
+  const googleBtn = document.getElementById("google-login-btn");
+  googleBtn.addEventListener("click", async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      window.location.href = "scan.html";
+    } catch (error) {
+      showError("Erro ao entrar com o Google.");
+      console.error(error);
+    }
+  });
+
+  // Função para mostrar mensagens de erro
+  function showError(message) {
+    errorDiv.textContent = message;
     errorDiv.classList.add("show");
-
     setTimeout(() => {
       errorDiv.classList.remove("show");
     }, 5000);
   }
-} catch (error) {
-  errorDiv.textContent = "Erro ao fazer login. Verifique seu e-mail e senha e tente novamente.";
-  errorDiv.classList.add("show");
+</script>
 
-  setTimeout(() => {
-    errorDiv.classList.remove("show");
-  }, 5000);
-}
-    });
-  </script>
   
 </body> 
 </html>
