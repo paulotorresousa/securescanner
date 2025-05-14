@@ -197,15 +197,32 @@
       color: #111827;
     }
     #google-login-btn {
-    background-color: #f3f4f6;
-    color: #111827;
-    border: none;
-    padding: 10px 20px;
-    margin-top: 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  background-color: white;
+  color: #3c4043;
+  border: 1px solid #dadce0;
+  padding: 10px 24px;
+  border-radius: 9999px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  margin-top: 16px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s ease;
+}
+
+#google-login-btn:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#google-login-btn img {
+  width: 18px;
+  height: 18px;
+}
     .bottom-links {
       text-align: center;
       margin-top: 20px;
@@ -305,9 +322,11 @@
       
       <div class="social-buttons">
         <button id="google-login-btn">
-          <img src="" alt="">Entrar com Google</button>
-      
+          <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo">
+          <strong>Google</strong>
+        </button>
       </div>
+      
       <div class="bottom-links">
         <p>Esqueceu sua senha? <a href="esquecsenha.html">Recuperar senha</a></p>
         <p>Não tem uma conta? <a href="cadastro.html">Criar conta</a></p>
