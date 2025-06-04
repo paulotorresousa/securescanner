@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>SecureScanner - Sistema Integrado de Análise de Vulnerabilidades</title>
     <style>
         :root {
@@ -79,7 +80,7 @@
         align-items: center;
         gap: 1rem;
         }
-        
+
         nav ul {
           display: flex;
           list-style: none;
@@ -326,9 +327,35 @@
             color: var(--gray-600);
         }
 
-       
+        .spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(30, 41, 59, 0.5); /* var(--dark) com transparência */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    display: none;
+}
 
-        
+.spinner {
+    border: 6px solid var(--gray-200);
+    border-top: 6px solid var(--primary);
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
 
         @media (max-width: 768px) {
             .header-content {
@@ -359,9 +386,12 @@
     </style>
 </head>
 <body>
-    <div class="loading-overlay">
+
+    <div class="spinner-overlay" id="spinner">
         <div class="spinner"></div>
     </div>
+
+
 
     <header>
         <div class="container">
@@ -438,7 +468,7 @@
                                 <p class="scan-option-description">Análise detalhada incluindo verificações de IoT e OT. Duração estimada: 30-60 minutos.</p>
                             </div>
 
-                           
+
                         </div>
                     </div>
 
@@ -451,68 +481,111 @@
                         </button>
                         <button type="reset" class="btn btn-secondary">Limpar</button>
                     </div>
-                </form>        
+                </form>
+
+                <div class="card" id="results-card" style="display:none;">
+                    <div class="card-header">
+                        <h2 class="card-title">Resultados da Análise</h2>
+                        <p class="card-description">Resumo das vulnerabilidades encontradas.</p>
+                    </div>
+                    <canvas id="cveChart"></canvas>
+
+                </div>
             </div>
         </div>
     </main>
 
     <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 
-  const firebaseConfig = {
-      apiKey: "AIzaSyAnA0X3VK1jW4Gv2lkJ_Cp4g7jL1hQ36u4",
-      authDomain: "scanner-c65ce.firebaseapp.com",
-      projectId: "scanner-c65ce",
-      storageBucket: "scanner-c65ce.firebasestorage.app",
-      messagingSenderId: "731199717476",
-      appId: "1:731199717476:web:7d03c2f4acf2f06d5d5f71",
-      measurementId: "G-R6QW0YRC58"
-    };
+    let cveChartInstance = null;
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+    document.getElementById('scan-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
 
-  const userDropdown = document.getElementById("userDropdown");
-  const dropdownContent = document.getElementById("dropdownContent");
+        const ip = document.getElementById('ip-address').value;
+        const subnetMask = document.getElementById('subnet-mask').value;
+        const selectedOption = document.querySelector('.scan-option.selected').dataset.option;
 
-userDropdown.addEventListener("click", (event) => {
-  event.stopPropagation(); // impede que o clique feche o menu imediatamente
-  dropdownContent.style.display = 
-    dropdownContent.style.display === "block" ? "none" : "block";
-});
+        // Mostra o spinner (se existir)
+        const spinner = document.getElementById('spinner');
+        if (spinner) spinner.style.display = 'flex';
 
-document.addEventListener("click", (event) => {
-  if (!dropdownContent.contains(event.target) && event.target !== userDropdown) {
-    dropdownContent.style.display = "none";
-  }
-});
-
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      document.getElementById('userName').textContent = user.displayName || "Usuário";
-      document.getElementById('userEmail').textContent = user.email;
-    } else {
-      window.location.href = 'index.html';
-    }
-  });
-
-  document.getElementById("logoutButton").addEventListener("click", () => {
-    signOut(auth).then(() => {
-      window.location.href = 'index.html';
-    });
-  });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // Scan options selection
-            const scanOptions = document.querySelectorAll('.scan-option');
-            scanOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    scanOptions.forEach(opt => opt.classList.remove('selected'));
-                    this.classList.add('selected');
-                });
+        try {
+            const res = await fetch('http://172.16.43.199:5000/scan', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    target: ip,
+                    subnet_mask: subnetMask,
+                    option: selectedOption
+                })
             });
-         });
-    </script>
+
+            const data = await res.json();
+
+            if (data.results) {
+                displayResults(data.results);
+            } else {
+                alert('Nenhum resultado recebido.');
+            }
+
+        } catch (error) {
+            alert('Erro ao realizar a análise. Tente novamente.');
+            console.error(error);
+        } finally {
+            if (spinner) spinner.style.display = 'none';
+        }
+    });
+
+    function displayResults(results) {
+        const ctx = document.getElementById('cveChart').getContext('2d');
+
+        const cveCounts = results.map(r =>
+            r.services.reduce((acc, svc) => acc + svc.cves.length, 0)
+        );
+
+        const labels = results.map(r => r.ip);
+
+        // Destroi o gráfico anterior se existir
+        if (cveChartInstance) {
+            cveChartInstance.destroy();
+        }
+
+        cveChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Vulnerabilidades encontradas',
+                    data: cveCounts,
+                    backgroundColor: 'rgba(37, 99, 235, 0.6)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        // Ajusta o tamanho do canvas
+        const canvas = document.getElementById('cveChart');
+        canvas.style.height = '300px';
+        canvas.style.width = '100%';
+
+        document.getElementById('results-card').style.display = 'block';
+    }
+
+    // Selecionar opção de análise
+    document.querySelectorAll('.scan-option').forEach(option => {
+        option.addEventListener('click', function() {
+            document.querySelectorAll('.scan-option').forEach(opt => opt.classList.remove('selected'));
+            this.classList.add('selected');
+        });
+    });
+</script>
+
+
 </body>
 </html>
