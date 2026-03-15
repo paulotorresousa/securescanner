@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureScanner Dashboard</title>
+    <!-- Bibliotecas externas (Chart.js para gráficos, D3.js para o mapa de ativos) -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <title>SecureScanner - Sistema Integrado de Análise de Vulnerabilidades</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script> 
+
     <style>
+        /* Variáveis CSS para cores e espaçamento */
         :root {
             --primary: #2563eb;
             --primary-dark: #1d4ed8;
@@ -22,8 +26,16 @@
             --gray-700: #334155;
             --gray-800: #1e293b;
             --gray-900: #0f172a;
+
+            /* Cores de severidade para consistência */
+            --critical-color: #ef4444; /* Vermelho */
+            --high-color: #f97316;    /* Laranja */
+            --medium-color: #eab308;  /* Amarelo */
+            --low-color: #22c55e;     /* Verde */
+            --unknown-color: #64748b; /* Cinza para desconhecido */
         }
 
+        /* Reset básico e fonte */
         * {
             margin: 0;
             padding: 0;
@@ -31,12 +43,14 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        /* Estilos do corpo da página */
         body {
             background-color: var(--gray-100);
             color: var(--gray-800);
             line-height: 1.6;
         }
 
+        /* Estilos do cabeçalho */
         header {
             background-color: var(--dark);
             color: white;
@@ -44,6 +58,7 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
+        /* Container central para conteúdo */
         .container {
             width: 100%;
             max-width: 1200px;
@@ -51,12 +66,14 @@
             padding: 0 1rem;
         }
 
+        /* Layout do conteúdo do cabeçalho */
         .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
+        /* Estilos do logo */
         .logo {
             display: flex;
             align-items: center;
@@ -65,6 +82,7 @@
             font-weight: 700;
         }
 
+        /* Ícone do logo */
         .logo-icon {
             width: 32px;
             height: 32px;
@@ -75,18 +93,20 @@
             align-items: center;
             justify-content: center;
         }
+
+        /* Estilos de navegação */
         nav {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
         nav ul {
-          display: flex;
-          list-style: none;
-          gap: 1.5rem;
-          margin: 0;
-          padding: 0;
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+            margin: 0;
+            padding: 0;
         }
 
         nav a {
@@ -115,10 +135,12 @@
             background-color: #253563;
         }
 
+        /* Conteúdo principal */
         .main-content {
             padding: 2rem 0;
         }
 
+        /* Cartões de conteúdo */
         .card {
             background-color: white;
             border-radius: 8px;
@@ -142,6 +164,7 @@
             color: var(--gray-600);
         }
 
+        /* Grupos de formulário */
         .form-group {
             margin-bottom: 1.5rem;
         }
@@ -174,6 +197,7 @@
             color: var(--gray-500);
         }
 
+        /* Botões */
         .btn {
             display: inline-block;
             padding: 0.75rem 1.5rem;
@@ -199,59 +223,58 @@
         .btn-primary:hover {
             background-color: #253563;
         }
+
+        /* Dropdown de perfil */
         .dropdown {
-    position: relative;
-    display: inline-block;
-}
+            position: relative;
+            display: inline-block;
+        }
 
-.dropbtn {
-    background-color: transparent;
-    border: none;
-    color: var(--gray-300);
-    font-weight: 500;
-    cursor: pointer;
-    font-size: 1rem;
-}
+        .dropbtn {
+            background-color: transparent;
+            border: none;
+            color: var(--gray-300);
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 1rem;
+        }
 
-.dropbtn:hover {
-    color: white;
-}
+        .dropbtn:hover {
+            color: white;
+        }
 
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: white;
-    color: black;
-    min-width: 200px;
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    top: 120%;
-    right: 0;
-    z-index: 1000;
-}
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            color: black;
+            min-width: 200px;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            top: 120%;
+            right: 0;
+            z-index: 1000;
+        }
+        #dropdownContent p {
+            margin: 0.25rem 0;
+            font-size: 0.9rem;
+        }
 
+        #logoutButton {
+            margin-top: 0.5rem;
+            background-color: #e53e3e;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            width: 100%;
+            border-radius: 4px;
+            cursor: pointer;
+        }
 
-
-#dropdownContent p {
-    margin: 0.25rem 0;
-    font-size: 0.9rem;
-}
-
-#logoutButton {
-    margin-top: 0.5rem;
-    background-color: #e53e3e;
-    color: white;
-    border: none;
-    padding: 0.5rem;
-    width: 100%;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-#logoutButton:hover {
-    background-color: #c53030;
-}
+        #logoutButton:hover {
+            background-color: #c53030;
+        }
 
         .btn-secondary {
             background-color: var(--gray-200);
@@ -273,6 +296,7 @@
             gap: 1rem;
         }
 
+        /* Opções de scan (velocidade, portas, etc.) */
         .scan-options {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -327,36 +351,342 @@
             color: var(--gray-600);
         }
 
-        .spinner-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(30, 41, 59, 0.5); /* var(--dark) com transparência */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-    display: none;
-}
+        /* PROGRESS BAR AND LOADING SCREEN */
+        .progress-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(30, 41, 59, 0.9); /* Fundo mais escuro */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            display: none; /* Escondido por padrão */
+            color: white;
+            font-size: 1.5rem;
+            text-align: center;
+            padding: 1rem;
+        }
 
-.spinner {
-    border: 6px solid var(--gray-200);
-    border-top: 6px solid var(--primary);
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    animation: spin 1s linear infinite;
-}
+        .progress-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
+        .progress-message {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .progress-container {
+            width: 90%;
+            max-width: 600px;
+            background-color: var(--gray-700);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            height: 30px;
+            width: 0%; /* Começa em 0% */
+            background-color: var(--primary);
+            border-radius: 5px;
+            transition: width 0.3s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        /* Custom Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000; /* Acima da tela de progresso */
+            display: none; /* Escondido por padrão */
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+            position: relative; /* Para o botão de fechar */
+            max-height: 90vh; /* Limita a altura do modal */
+            overflow-y: auto; /* Permite scroll se o conteúdo for grande */
+        }
+
+        .modal-content .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-500);
+        }
+        .modal-content .close-button:hover {
+            color: var(--gray-800);
+        }
+
+        .modal-content h3 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .modal-content p {
+            color: var(--gray-700);
+            margin-bottom: 1.5rem;
+            text-align: left; /* Alinha o texto do modal à esquerda */
+        }
+
+        .modal-content pre {
+            background-color: var(--gray-100);
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: left;
+            white-space: pre-wrap; /* Quebra linhas longas */
+            word-wrap: break-word; /* Quebra palavras longas */
+        }
+
+        #modal-ok-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        #modal-ok-btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        /* Tabs for results */
+        .tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--gray-200);
+            overflow-x: auto; /* Allows horizontal scrolling on small screens */
+            white-space: nowrap; /* Prevents buttons from wrapping */
+        }
+
+        .tab-button {
+            background-color: transparent;
+            border: none;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gray-600);
+            transition: color 0.3s, border-bottom-color 0.3s;
+            border-bottom: 2px solid transparent;
+            flex-shrink: 0; /* Prevents buttons from shrinking */
+        }
+
+        .tab-button.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-button:hover:not(.active) {
+            color: var(--gray-800);
+        }
+
+        .tab-content {
+            display: none; /* Hidden by default */
+            padding: 1rem 0;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Vulnerability Summary */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-card {
+            background-color: var(--gray-100);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gray-700);
+            box-shadow: inset  0 0 0 1px var(--gray-300); /* Subtle border */
+        }
+        .summary-card span.count {
+            display: block;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        /* Colors for severity counts */
+        .summary-card.critical .count { color: var(--critical-color); }
+        .summary-card.high .count { color: var(--high-color); }
+        .summary-card.medium .count { color: var(--medium-color); }
+        .summary-card.low .count { color: var(--low-color); }
+        .summary-card.unknown .count { color: var(--unknown-color); }
+
+        /* Summary Chart */
+        #vulnerabilityChart {
+            max-height: 350px;
+            margin-top: 2rem;
+        }
+
+        /* Detailed Vulnerabilities List */
+        .vulnerability-item, .recommendation-item, .asset-item { /* Unified list item style */
+            background-color: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; /* For responsiveness */
+            gap: 1rem;
+        }
+
+        .vulnerability-item-info, .recommendation-info, .asset-info {
+            flex-grow: 1;
+            text-align: left;
+        }
+
+        .vulnerability-item-info h4, .recommendation-info h4, .asset-info h4 {
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+            color: var(--dark);
+        }
+
+        .vulnerability-item-info p, .recommendation-info p, .asset-info p {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+            margin-bottom: 0.25rem;
+        }
+
+        .severity-badge {
+            display: inline-block;
+            padding: 0.3rem 0.7rem;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            color: white;
+        }
+        .severity-badge.critical { background-color: var(--critical-color); }
+        .severity-badge.high { background-color: var(--high-color); }
+        .severity-badge.medium { background-color: var(--medium-color); }
+        .severity-badge.low { background-color: var(--low-color); }
+        .severity-badge.unknown { background-color: var(--unknown-color); }
+
+        /* Mapa de Ativos */
+        #asset-map-svg {
+            width: 100%;
+            height: 500px; /* Altura fixa para o SVG */
+            background-color: var(--gray-50);
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            margin-top: 1rem;
+            overflow: hidden; /* Garante que o conteúdo não vaze */
+        }
+        /* Estilos para os nós do D3.js */
+        .node circle {
+            stroke: var(--dark);
+            stroke-width: 1.5px;
+            cursor: pointer; /* Indica que o nó é clicável */
+        }
+        .node text {
+            font-size: 10px;
+            fill: var(--gray-900);
+            text-anchor: middle;
+            pointer-events: none; /* Permite clicar no círculo por baixo */
+            user-select: none; /* Impede seleção de texto */
+        }
+        .link {
+            stroke: var(--gray-500);
+            stroke-opacity: 0.6;
+            stroke-width: 1.5px;
+        }
+        .tooltip {
+            position: absolute;
+            text-align: center;
+            width: auto;
+            height: auto;
+            padding: 8px;
+            font: 12px sans-serif;
+            background: lightsteelblue;
+            border: 0px;
+            border-radius: 8px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
 
 
+        /* Recomendações */
+        .recommendation-item .btn {
+            white-space: nowrap; /* Impede que o botão quebre linha */
+        }
 
+        /* NOVO: Estilos para o Navbar de IPs */
+        .ip-navbar {
+            display: flex;
+            flex-wrap: wrap; /* Permite que os botões quebrem linha */
+            gap: 0.5rem; /* Espaçamento entre os botões */
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--gray-300);
+        }
+
+        .ip-navbar .ip-button {
+            background-color: var(--gray-200);
+            color: var(--gray-700);
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .ip-navbar .ip-button:hover {
+            background-color: var(--gray-300);
+            border-color: var(--gray-400);
+        }
+
+        .ip-navbar .ip-button.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        /* Media Queries para responsividade */
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
@@ -371,7 +701,7 @@
                 grid-template-columns: 1fr;
             }
 
-            .results-summary {
+            .summary-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -382,16 +712,33 @@
             .btn {
                 width: 100%;
             }
+
+            .vulnerability-item, .recommendation-item, .asset-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="spinner-overlay" id="spinner">
-        <div class="spinner"></div>
+    <div class="progress-overlay" id="progress-overlay">
+        <h2 class="progress-title">Análise em Andamento</h2>
+        <p class="progress-message" id="progress-message">Iniciando varredura da rede...</p>
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar">0%</div>
+        </div>
     </div>
 
-
+    <div id="custom-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-button" id="modal-close-button">&times;</button>
+            <h3 id="modal-title"></h3>
+            <p id="modal-message"></p>
+            <div id="modal-details-content" style="text-align: left;"></div> <!-- Detailed content here -->
+            <button id="modal-ok-btn" class="btn btn-primary" style="display: none;">OK</button> <!-- OK button, only for simple alerts -->
+        </div>
+    </div>
 
     <header>
         <div class="container">
@@ -407,13 +754,15 @@
                 <nav>
                     <ul>
                         <li><a href="#" class="active">Dashboard</a></li>
+                        <!-- Adicione mais links se necessário -->
                     </ul>
                     <div class="dropdown">
                       <button class="dropbtn" id="userDropdown">Perfil ▾</button>
                       <div class="dropdown-content" id="dropdownContent">
-                        <p id="userName">Nome do Usuário</p>
+                        <p id="userName">Nome de Usuário</p>
                         <p id="userEmail">email@exemplo.com</p>
                         <button id="logoutButton">Sair</button>
+                      </div>
                     </div>
                 </nav>
             </div>
@@ -424,51 +773,92 @@
         <div class="container">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">Análise de Vulnerabilidades</h2>
-                    <p class="card-description">Configure e inicie uma nova análise de vulnerabilidades para seu ambiente de rede.</p>
+                    <h2 class="card-title">Configurar Análise</h2>
+                    <p class="card-description">Insira os detalhes para iniciar uma nova varredura de vulnerabilidades.</p>
                 </div>
 
                 <form id="scan-form">
                     <div class="form-group">
-                        <label for="ip-address" class="form-label">Endereço IP</label>
-                        <input type="text" id="ip-address" class="form-input" placeholder="Ex: 192.168.1.1" required>
-                        <p class="form-hint">Insira o endereço IP da rede que deseja analisar.</p>
+                        <label for="ip-address" class="form-label">Endereço IP ou Range</label>
+                        <input type="text" id="ip-address" class="form-input" placeholder="Ex: 192.168.1.1, 192.168.1.0/24 ou 172.16.9.201-225" required>
+                        <p class="form-hint">Insira o endereço IP único, range CIDR ou com hífen</p>
                     </div>
 
                     <div class="form-group">
-                        <label for="subnet-mask" class="form-label">Máscara de Sub-rede</label>
-                        <input type="text" id="subnet-mask" class="form-input" placeholder="Ex: 255.255.255.0 ou /24" required>
-                        <p class="form-hint">Insira a máscara de sub-rede para determinar o escopo da análise.</p>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Opções de Análise</label>
+                        <label class="form-label">Velocidade do Scan</label>
                         <div class="scan-options">
-                            <div class="scan-option selected" data-option="quick">
+                            <div class="scan-option selected" data-speed="T5">
                                 <div class="scan-option-header">
-                                    <div class="scan-option-icon">R</div>
-                                    <div class="scan-option-title">Análise Rápida</div>
+                                    <div class="scan-option-icon">F</div>
+                                    <div class="scan-option-title">Scan Barulhento</div>
                                 </div>
-                                <p class="scan-option-description">Verifica portas comuns e vulnerabilidades conhecidas. Duração estimada: 5-10 minutos.</p>
+                                <p class="scan-option-description">Scan mais rápido (-T5), mas mais detectável.</p>
                             </div>
 
-                            <div class="scan-option" data-option="standard">
+                            <div class="scan-option" data-speed="T3">
                                 <div class="scan-option-header">
-                                    <div class="scan-option-icon">P</div>
-                                    <div class="scan-option-title">Análise Padrão</div>
+                                    <div class="scan-option-icon">N</div>
+                                    <div class="scan-option-title">Scan Normal</div>
                                 </div>
-                                <p class="scan-option-description">Verifica todas as portas e serviços ativos. Duração estimada: 15-30 minutos.</p>
+                                <p class="scan-option-description">Velocidade balanceada (-T3).</p>
                             </div>
 
-                            <div class="scan-option" data-option="comprehensive">
+                            <div class="scan-option" data-speed="T1">
                                 <div class="scan-option-header">
-                                    <div class="scan-option-icon">C</div>
-                                    <div class="scan-option-title">Análise Completa</div>
+                                    <div class="scan-option-icon">L</div>
+                                    <div class="scan-option-title">Scan Lento</div>
                                 </div>
-                                <p class="scan-option-description">Análise detalhada incluindo verificações de IoT e OT. Duração estimada: 30-60 minutos.</p>
+                                <p class="scan-option-description">Scan mais lento (-T1) e discreto.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Portas para Scan</label>
+                        <div class="scan-options">
+                            <div class="scan-option" data-ports="top_20">
+                                <div class="scan-option-header">
+                                    <div class="scan-option-icon">20</div>
+                                    <div class="scan-option-title">20 Portas</div>
+                                </div>
+                                <p class="scan-option-description">Scan nas 20 portas mais comuns.</p>
+                            </div>
+                            <div class="scan-option selected" data-ports="top_100">
+                                <div class="scan-option-header">
+                                    <div class="scan-option-icon">100</div>
+                                    <div class="scan-option-title">100 Portas</div>
+                                </div>
+                                <p class="scan-option-description">Scan nas 100 portas mais comuns.</p>
                             </div>
 
+                            <div class="scan-option" data-ports="top_1000">
+                                <div class="scan-option-header">
+                                    <div class="scan-option-icon">1K</div>
+                                    <div class="scan-option-title">1000 Portas</div>
+                                </div>
+                                <p class="scan-option-description">Scan nas 1000 portas mais comuns.</p>
+                            </div>
 
+                            <div class="scan-option" data-ports="all_ports">
+                                <div class="scan-option-header">
+                                    <div class="scan-option-icon">A</div>
+                                    <div class="scan-option-title">Todas as Portas</div>
+                                </div>
+                                <p class="scan-option-description">Scan em todas as portas.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Opções Adicionais</label>
+                        <div class="scan-options">
+                            <div class="scan-option" id="os-detection">
+                                <div class="scan-option-header">
+                                    <div class="scan-option-icon">OS</div>
+                                    <div class="scan-option-title">Detecção de OS</div>
+                                </div>
+                                <p class="scan-option-description">Tentar detectar sistema operacional.</p>
+                            </div>
                         </div>
                     </div>
 
@@ -482,110 +872,894 @@
                         <button type="reset" class="btn btn-secondary">Limpar</button>
                     </div>
                 </form>
+            </div>
 
-                <div class="card" id="results-card" style="display:none;">
-                    <div class="card-header">
-                        <h2 class="card-title">Resultados da Análise</h2>
-                        <p class="card-description">Resumo das vulnerabilidades encontradas.</p>
+            <div class="card" id="results-card" style="display:none;">
+                <div class="card-header">
+                    <h2 class="card-title">Resultados da Análise</h2>
+                    <p class="card-description">Visão geral e detalhes das vulnerabilidades e ativos.</p>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab-button active" data-tab="summary-tab">Resumo</button>
+                    <button class="tab-button" data-tab="vulnerabilities-tab">Vulnerabilidades</button>
+                    <button class="tab-button" data-tab="asset-map-tab">Mapa de Ativos</button>
+                    <button class="tab-button" data-tab="recommendations-tab">Recomendações</button>
+                </div>
+
+                <div id="summary-tab" class="tab-content active">
+                    <h3>Visão Geral das Vulnerabilidades</h3>
+                    <div class="ip-navbar" id="summary-ip-navbar">
+                        </div>
+                    <div class="summary-grid">
+                        <div class="summary-card critical"><span id="count-critical" class="count">0</span>Vulnerabilidades Críticas</div>
+                        <div class="summary-card high"><span id="count-high" class="count">0</span>Vulnerabilidades Altas</div>
+                        <div class="summary-card medium"><span id="count-medium" class="count">0</span>Vulnerabilidades Médias</div>
+                        <div class="summary-card low"><span id="count-low" class="count">0</span>Vulnerabilidades Baixas</div>
+                        <div class="summary-card unknown"><span id="count-unknown" class="count">0</span>Severidade Desconhecida</div>
                     </div>
-                    <canvas id="cveChart"></canvas>
+                    <canvas id="vulnerabilityChart"></canvas> <div id="detected-devices-summary" style="margin-top: 2rem;">
+                        <h3>Dispositivos Detectados</h3>
+                        <div class="summary-grid">
+                            <div class="summary-card"><span id="count-total-devices" class="count">0</span>Total de Dispositivos</div>
+                            <div class="summary-card"><span id="count-servers" class="count">0</span>Servidores</div>
+                            <div class="summary-card"><span id="count-workstations" class="count">0</span>Estações de Trabalho</div>
+                            <div class="summary-card"><span id="count-iot" class="count">0</span>Dispositivos IoT</div>
+                        </div>
+                    </div>
+                </div>
 
+                <div id="vulnerabilities-tab" class="tab-content">
+                    <h3>Detalhes das Vulnerabilidades</h3>
+                    <div class="ip-navbar" id="vulnerabilities-ip-navbar">
+                        </div>
+                    <div id="vulnerabilities-list">
+                        </div>
+                </div>
+
+                <div id="asset-map-tab" class="tab-content">
+                    <h3>Mapa de Ativos</h3>
+                    <p>Uma representação visual dos dispositivos detectados na rede. Passe o mouse sobre um círculo para ver detalhes.</p>
+                    <svg id="asset-map-svg"></svg>
+                </div>
+
+                <div id="recommendations-tab" class="tab-content">
+                    <h3>Recomendações de Mitigação</h3>
+                    <div class="ip-navbar" id="recommendations-ip-navbar">
+                        </div>
+                    <div id="recommendations-list">
+                        </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    <script>
+    let progressInterval;
+    let currentProgress = 0;
+    const progressMessages = [
+        "Iniciando varredura da rede...",
+        "Realizando descoberta de hosts ativos...",
+        "Analisando portas e serviços...",
+        "Identificando sistemas operacionais...",
+        "Coletando informações de vulnerabilidades (CVEs) do NVD...",
+        "Processando resultados e gerando relatórios...",
+        "Análise concluída. Preparando o dashboard!"
+    ];
+    let messageIndex = 0;
+    let vulnerabilityChartInstance = null;
 
-    let cveChartInstance = null;
+    let globalScanResults = [];
+    let globalUniqueVulnerabilities = []; 
+    let currentVulnerabilityFilterIp = 'all';
+    let currentSummaryFilterIp = 'all'; 
+    let currentRecommendationsFilterIp = 'all'; // NOVO: Estado para o filtro de IP nas recomendações
 
+    // --- Funções do Modal (para alertas e detalhes de CVE) ---
+    function showModal(title, message, detailsHtml = '', showOkBtn = false) {
+        const modal = document.getElementById('custom-modal');
+        document.getElementById('modal-title').textContent = title;
+        document.getElementById('modal-message').textContent = message;
+        document.getElementById('modal-details-content').innerHTML = detailsHtml; 
+        document.getElementById('modal-ok-btn').style.display = showOkBtn ? 'inline-block' : 'none';
+        modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('custom-modal').style.display = 'none';
+        document.getElementById('modal-details-content').innerHTML = ''; 
+    }
+
+    document.getElementById('modal-close-button').addEventListener('click', closeModal);
+    document.getElementById('modal-ok-btn').addEventListener('click', closeModal);
+
+
+    // --- Funções da Barra de Progresso e Overlay ---
+    function startProgressBarAnimation() {
+        const progressBar = document.getElementById('progress-bar');
+        const progressMessage = document.getElementById('progress-message');
+        const progressOverlay = document.getElementById('progress-overlay');
+
+        progressOverlay.style.display = 'flex';
+        currentProgress = 0;
+        messageIndex = 0;
+        progressBar.style.width = '0%';
+        progressBar.textContent = '0%';
+        progressMessage.textContent = progressMessages[messageIndex];
+
+        const totalDuration = 1500000; // 25 minutos para scans mais longos
+        const updateInterval = 1000;
+
+        progressInterval = setInterval(() => {
+            currentProgress += (updateInterval / totalDuration) * 100;
+            if (currentProgress >= 99) { 
+                currentProgress = 99; 
+                progressBar.textContent = `99%`;
+            } else {
+                progressBar.textContent = `${Math.floor(currentProgress)}%`;
+            }
+            progressBar.style.width = `${currentProgress}%`;
+
+            const segmentDuration = totalDuration / progressMessages.length;
+            const newIndex = Math.floor((currentProgress / 100) * progressMessages.length);
+            if (newIndex < progressMessages.length && newIndex > messageIndex) {
+                messageIndex = newIndex;
+                progressMessage.textContent = progressMessages[newIndex];
+            }
+
+        }, updateInterval);
+    }
+
+    function stopProgressBarAnimation() {
+        clearInterval(progressInterval);
+        const progressBar = document.getElementById('progress-bar');
+        progressBar.style.width = '100%';
+        progressBar.textContent = '100%';
+        document.getElementById('progress-message').textContent = 'Análise Concluída. Preparando o dashboard!';
+        
+        setTimeout(() => {
+            document.getElementById('progress-overlay').style.display = 'none';
+        }, 800); 
+    }
+
+    // --- Lógica Principal do Scan (backend integration) ---
     document.getElementById('scan-form').addEventListener('submit', async function(e) {
         e.preventDefault();
 
         const ip = document.getElementById('ip-address').value;
-        const subnetMask = document.getElementById('subnet-mask').value;
-        const selectedOption = document.querySelector('.scan-option.selected').dataset.option;
+        const speed = document.querySelector('.scan-option.selected[data-speed]').dataset.speed;
+        const portOption = document.querySelector('.scan-option.selected[data-ports]').dataset.ports;
+        const osDetection = document.getElementById('os-detection').classList.contains('selected');
 
-        // Mostra o spinner (se existir)
-        const spinner = document.getElementById('spinner');
-        if (spinner) spinner.style.display = 'flex';
+        startProgressBarAnimation();
 
         try {
-            const res = await fetch('http://172.16.43.199:5000/scan', {
+            const res = await fetch('http://localhost:5000/scan', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     target: ip,
-                    subnet_mask: subnetMask,
-                    option: selectedOption
+                    speed: speed,
+                    port_option: portOption,
+                    os_detection: osDetection
                 })
             });
 
             const data = await res.json();
+            stopProgressBarAnimation();
 
             if (data.results) {
-                displayResults(data.results);
+                globalScanResults = data.results;
+                processAndDisplayResults(data.results);
+            } else if (data.error) {
+                showModal('Erro na Análise', 'Erro: ' + data.error, '', true);
+            } else if (data.message) {
+                showModal('Análise Concluída', data.message, '', true);
             } else {
-                alert('Nenhum resultado recebido.');
+                showModal('Erro Desconhecido', 'Nenhum resultado ou erro válido recebido da API.', '', true);
             }
 
         } catch (error) {
-            alert('Erro ao realizar a análise. Tente novamente.');
+            stopProgressBarAnimation();
+            showModal('Erro de Conexão', 'Erro ao realizar a análise. Verifique se o servidor está ativo e sua conexão. Detalhes: ' + error.message, '', true);
             console.error(error);
-        } finally {
-            if (spinner) spinner.style.display = 'none';
         }
     });
 
-    function displayResults(results) {
-        const ctx = document.getElementById('cveChart').getContext('2d');
+    // --- Funções de Processamento e Exibição de Resultados nas Abas ---
 
-        const cveCounts = results.map(r =>
-            r.services.reduce((acc, svc) => acc + svc.cves.length, 0)
-        );
+    function processAndDisplayResults(results) {
+        let allVulnerabilities = [];
+        let deviceCounts = {
+            total: results.length,
+            servers: 0,
+            workstations: 0,
+            iot: 0,
+            unknown: 0
+        };
 
-        const labels = results.map(r => r.ip);
+        results.forEach(hostResult => {
+            const osName = hostResult.os_details.name.toLowerCase();
+            const osFamily = hostResult.os_details.family.toLowerCase();
+            const isServer = hostResult.services.some(s => ['ssh', 'http', 'https', 'ftp', 'smtp', 'mysql', 'mssql', 'rdp'].includes(s.name));
 
-        // Destroi o gráfico anterior se existir
-        if (cveChartInstance) {
-            cveChartInstance.destroy();
+            if (isServer || osName.includes('server') || osFamily.includes('linux')) {
+                deviceCounts.servers++;
+            } else if (osName.includes('windows') || osName.includes('macos') || osName.includes('ubuntu') || osName.includes('debian')) {
+                 deviceCounts.workstations++;
+            } else if (osName.includes('embedded') || osName.includes('router') || osName.includes('wap') || osName.includes('camera') || osName.includes('printer')) {
+                deviceCounts.iot++;
+            } else {
+                deviceCounts.unknown++;
+            }
+            
+            hostResult.services.forEach(service => {
+                service.cves.forEach(cve => {
+                    allVulnerabilities.push({
+                        cve_id: cve.id,
+                        description: cve.summary,
+                        severity: cve.severity,
+                        cvss_score: cve.cvss_score,
+                        references: cve.references,
+                        affected_ips: [hostResult.ip],
+                        affected_service: `${service.name} (${service.product || ''} ${service.version || ''})`,
+                        port: service.port,
+                        protocol: service.protocol,
+                        host_details: hostResult 
+                    });
+                });
+            });
+        });
+
+        // Desduplica as vulnerabilidades para o resumo e para a lista principal
+        const uniqueVulnerabilitiesByIdAndIP = {};
+        allVulnerabilities.forEach(vuln => {
+            const key = `${vuln.cve_id}-${vuln.affected_ips.join(',')}`;
+            if (!uniqueVulnerabilitiesByIdAndIP[key]) {
+                uniqueVulnerabilitiesByIdAndIP[key] = vuln;
+            } else {
+                uniqueVulnerabilitiesByIdAndIP[key].affected_ips = 
+                    [...new Set([...uniqueVulnerabilitiesByIdAndIP[key].affected_ips, ...vuln.affected_ips])];
+            }
+        });
+        globalUniqueVulnerabilities = Object.values(uniqueVulnerabilitiesByIdAndIP); // Armazena globalmente
+
+        let severityCounts = { critical: 0, high: 0, medium: 0, low: 0, unknown: 0 };
+        globalUniqueVulnerabilities.forEach(vuln => severityCounts[vuln.severity]++);
+
+        updateSummaryTab(globalUniqueVulnerabilities, deviceCounts, 'all'); 
+        displayVulnerabilities(globalUniqueVulnerabilities, 'all'); 
+        displayAssetMap(results);
+        displayRecommendations(globalUniqueVulnerabilities, 'all'); // Chama com 'all' inicialmente
+
+        document.getElementById('results-card').style.display = 'block';
+        activateTab('summary-tab');
+    }
+
+    // --- Summary Tab (Tab 1) ---
+    function updateSummaryTab(allVulnerabilities, deviceCounts, filterIp = 'all') {
+        const summaryIpNavbar = document.getElementById('summary-ip-navbar');
+        summaryIpNavbar.innerHTML = ''; 
+
+        const uniqueIps = new Set();
+        allVulnerabilities.forEach(vuln => {
+            vuln.affected_ips.forEach(ip => uniqueIps.add(ip));
+        });
+        const sortedIps = Array.from(uniqueIps).sort((a, b) => {
+            const ipToNum = ip => ip.split('.').reduce((acc, octet) => (acc << 8) + parseInt(octet, 10), 0);
+            return ipToNum(a) - ipToNum(b);
+        });
+
+        const allIpButton = document.createElement('button');
+        allIpButton.textContent = 'Todos os IPs';
+        allIpButton.className = `ip-button ${filterIp === 'all' ? 'active' : ''}`;
+        allIpButton.addEventListener('click', () => {
+            currentSummaryFilterIp = 'all'; 
+            updateSummaryTab(globalUniqueVulnerabilities, deviceCounts, 'all');
+        });
+        summaryIpNavbar.appendChild(allIpButton);
+
+        sortedIps.forEach(ip => {
+            const button = document.createElement('button');
+            button.textContent = ip;
+            button.className = `ip-button ${filterIp === ip ? 'active' : ''}`;
+            button.addEventListener('click', () => {
+                currentSummaryFilterIp = ip; 
+                updateSummaryTab(globalUniqueVulnerabilities, deviceCounts, ip);
+            });
+            summaryIpNavbar.appendChild(button);
+        });
+
+        const filteredVulnerabilities = allVulnerabilities.filter(vuln => {
+            return filterIp === 'all' || vuln.affected_ips.includes(filterIp);
+        });
+
+        let severityCounts = { critical: 0, high: 0, medium: 0, low: 0, unknown: 0 };
+        filteredVulnerabilities.forEach(vuln => severityCounts[vuln.severity]++);
+
+        document.getElementById('count-critical').textContent = severityCounts.critical;
+        document.getElementById('count-high').textContent = severityCounts.high;
+        document.getElementById('count-medium').textContent = severityCounts.medium;
+        document.getElementById('count-low').textContent = severityCounts.low;
+        document.getElementById('count-unknown').textContent = 0; 
+
+        document.getElementById('count-total-devices').textContent = deviceCounts.total;
+        document.getElementById('count-servers').textContent = deviceCounts.servers;
+        document.getElementById('count-workstations').textContent = deviceCounts.workstations;
+        document.getElementById('count-iot').textContent = deviceCounts.iot;
+
+        const ctx = document.getElementById('vulnerabilityChart').getContext('2d');
+        if (vulnerabilityChartInstance) {
+            vulnerabilityChartInstance.destroy();
         }
 
-        cveChartInstance = new Chart(ctx, {
+        vulnerabilityChartInstance = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: labels,
+                labels: ['Crítica', 'Alta', 'Média', 'Baixa'], 
                 datasets: [{
-                    label: 'Vulnerabilidades encontradas',
-                    data: cveCounts,
-                    backgroundColor: 'rgba(37, 99, 235, 0.6)'
+                    label: 'Número de Vulnerabilidades',
+                    data: [
+                        severityCounts.critical,
+                        severityCounts.high,
+                        severityCounts.medium,
+                        severityCounts.low
+                    ],
+                    backgroundColor: [
+                        varToRgb('--critical-color', 0.8),
+                        varToRgb('--high-color', 0.8),
+                        varToRgb('--medium-color', 0.8),
+                        varToRgb('--low-color', 0.8)
+                    ],
+                    borderColor: [
+                        varToRgb('--critical-color', 1),
+                        varToRgb('--high-color', 1),
+                        varToRgb('--medium-color', 1),
+                        varToRgb('--low-color', 1)
+                    ],
+                    borderWidth: 1
                 }]
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) { if (value % 1 === 0) return value; }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
             }
         });
-
-        // Ajusta o tamanho do canvas
-        const canvas = document.getElementById('cveChart');
-        canvas.style.height = '300px';
-        canvas.style.width = '100%';
-
-        document.getElementById('results-card').style.display = 'block';
     }
 
-    // Selecionar opção de análise
-    document.querySelectorAll('.scan-option').forEach(option => {
+    function varToRgb(varName, alpha = 1) {
+        const style = getComputedStyle(document.documentElement);
+        const color = style.getPropertyValue(varName).trim();
+        if (color.startsWith('#') && color.length === 7) {
+            const r = parseInt(color.substring(1, 3), 16);
+            const g = parseInt(color.substring(3, 5), 16);
+            const b = parseInt(color.substring(5, 7), 16);
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        }
+        return color;
+    }
+
+    // --- Detailed Vulnerabilities Tab (Tab 2) ---
+    function displayVulnerabilities(vulnerabilities, currentFilterIp = 'all') {
+        const listDiv = document.getElementById('vulnerabilities-list');
+        listDiv.innerHTML = ''; 
+
+        const ipNavbar = document.getElementById('vulnerabilities-ip-navbar');
+        ipNavbar.innerHTML = '';
+
+        if (vulnerabilities.length === 0) {
+            listDiv.innerHTML = '<p style="text-align: center; color: var(--gray-600);">Nenhuma vulnerabilidade detalhada detectada.</p>';
+            return;
+        }
+
+        // 1. Criar o Navbar de IPs
+        const uniqueIps = new Set();
+        vulnerabilities.forEach(vuln => {
+            vuln.affected_ips.forEach(ip => uniqueIps.add(ip));
+        });
+        const sortedIps = Array.from(uniqueIps).sort((a, b) => {
+            const ipToNum = ip => ip.split('.').reduce((acc, octet) => (acc << 8) + parseInt(octet, 10), 0);
+            return ipToNum(a) - ipToNum(b);
+        });
+
+        const allIpButton = document.createElement('button');
+        allIpButton.textContent = 'Todos os IPs';
+        allIpButton.className = `ip-button ${currentFilterIp === 'all' ? 'active' : ''}`;
+        allIpButton.addEventListener('click', () => {
+            currentVulnerabilityFilterIp = 'all';
+            displayVulnerabilities(globalUniqueVulnerabilities, 'all');
+        });
+        ipNavbar.appendChild(allIpButton);
+
+        sortedIps.forEach(ip => {
+            const button = document.createElement('button');
+            button.textContent = ip;
+            button.className = `ip-button ${currentFilterIp === ip ? 'active' : ''}`;
+            button.addEventListener('click', () => {
+                currentVulnerabilityFilterIp = ip;
+                displayVulnerabilities(globalUniqueVulnerabilities, ip);
+            });
+            ipNavbar.appendChild(button);
+        });
+
+        // 2. Filtrar e exibir as vulnerabilidades
+        const filteredVulnerabilities = vulnerabilities.filter(vuln => {
+            return currentFilterIp === 'all' || vuln.affected_ips.includes(currentFilterIp);
+        });
+
+        const severityOrder = { 'critical': 5, 'high': 4, 'medium': 3, 'low': 2, 'unknown': 1 };
+        const sortedVulnerabilities = [...filteredVulnerabilities].sort((a, b) => severityOrder[b.severity] - severityOrder[a.severity]);
+
+        if (sortedVulnerabilities.length === 0) {
+            listDiv.innerHTML = '<p style="text-align: center; color: var(--gray-600);">Nenhuma vulnerabilidade encontrada para o IP selecionado.</p>';
+            return;
+        }
+
+        sortedVulnerabilities.forEach(vuln => {
+            const item = document.createElement('div');
+            item.className = 'vulnerability-item';
+            const displaySeverity = vuln.severity.charAt(0).toUpperCase() + vuln.severity.slice(1);
+            
+            item.innerHTML = `
+                <div class="vulnerability-item-info">
+                    <h4>${vuln.cve_id}</h4>
+                    <p>${vuln.description}</p>
+                    <p>Afetados: <strong>${Array.from(vuln.affected_ips).join(', ')}</strong> | Serviço: ${vuln.affected_service} (Porta: ${vuln.port}/${vuln.protocol})</p>
+                </div>
+                <span class="severity-badge ${vuln.severity}">${displaySeverity}</span>
+                <button class="btn btn-primary btn-sm view-details-btn" 
+                        data-cve-id="${vuln.cve_id}"
+                        data-summary="${vuln.description}"
+                        data-cvss="${vuln.cvss_score || 'N/A'}"
+                        data-references='${JSON.stringify(vuln.references)}'>
+                    Ver Detalhes
+                </button>
+            `;
+            listDiv.appendChild(item);
+        });
+
+        document.querySelectorAll('.view-details-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const cveId = this.dataset.cveId;
+                const summary = this.dataset.summary;
+                const cvss = this.dataset.cvss;
+                const references = JSON.parse(this.dataset.references);
+
+                let detailsHtml = `
+                    <p><strong>ID da CVE:</strong> ${cveId}</p>
+                    <p><strong>Resumo:</strong> ${summary}</p>
+                    <p><strong>Pontuação CVSS:</strong> ${cvss}</p>
+                    ${references.length > 0 ? 
+                        `<p><strong>Referências:</strong></p><ul>${references.map(ref => `<li><a href="${ref}" target="_blank">${ref}</a></li>`).join('')}</ul>` 
+                        : '<p>Nenhuma referência disponível.</p>'
+                    }
+                `;
+                showModal('Detalhes da Vulnerabilidade', '', detailsHtml, false);
+            });
+        });
+    }
+
+    // --- Mapa de Ativos (Tab 3) com D3.js ---
+    function displayAssetMap(hostResults) {
+        const svg = d3.select("#asset-map-svg");
+        svg.html('');
+        const width = svg.node().clientWidth;
+        const height = svg.node().clientHeight;
+
+        const simulation = d3.forceSimulation()
+            .force("link", d3.forceLink().id(d => d.id).distance(150).strength(0.5))
+            .force("charge", d3.forceManyBody().strength(-400))
+            .force("center", d3.forceCenter(width / 2, height / 2));
+
+        const nodes = hostResults.map((h, i) => {
+            let type = 'unknown';
+            const osName = h.os_details.name.toLowerCase();
+            const isServer = h.services.some(s => ['ssh', 'http', 'https', 'ftp', 'smtp', 'mysql', 'mssql', 'rdp'].includes(s.name));
+
+            if (isServer) { type = 'server'; }
+            else if (osName.includes('windows') || osName.includes('macos') || osName.includes('ubuntu') || osName.includes('debian')) { type = 'workstation'; }
+            else if (osName.includes('embedded') || osName.includes('router') || osName.includes('wap') || osName.includes('camera') || osName.includes('printer')) { type = 'iot'; }
+
+            const uniqueCvesForHost = new Set();
+            h.services.forEach(svc => {
+                svc.cves.forEach(cve => {
+                    uniqueCvesForHost.add(cve.id);
+                });
+            });
+
+            return {
+                id: h.ip,
+                name: h.ip,
+                hostname: h.hostname || 'N/A',
+                status: h.status,
+                os: h.os_details.name,
+                type: type,
+                services: h.services,
+                total_cves: uniqueCvesForHost.size
+            };
+        });
+
+        const links = [];
+        if (nodes.length > 0) {
+            if (nodes.length > 1) {
+                let centralNode = nodes[0]; 
+                if (nodes.some(n => n.total_cves > 0)) { 
+                    centralNode = nodes.reduce((maxNode, currentNode) => {
+                        return (currentNode.total_cves > maxNode.total_cves) ? currentNode : maxNode;
+                    }, nodes[0]);
+                }
+                
+                nodes.forEach(n => {
+                    if (n.id !== centralNode.id) {
+                        links.push({ source: centralNode.id, target: n.id });
+                    }
+                });
+            }
+        }
+        
+        const link = svg.append("g")
+            .attr("class", "links")
+            .selectAll("line")
+            .data(links)
+            .enter().append("line")
+            .attr("stroke", varToRgb('--gray-500', 0.6))
+            .attr("stroke-width", 1.5);
+
+        const node = svg.append("g")
+            .attr("class", "nodes")
+            .selectAll("g")
+            .data(nodes)
+            .enter().append("g")
+            .attr("class", "node")
+            .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended));
+
+        node.append("circle")
+            .attr("r", d => Math.min(30, 10 + d.total_cves * 0.5))
+            .attr("fill", d => {
+                let highestSeverity = 'low';
+                const severityOrder = { 'critical': 5, 'high': 4, 'medium': 3, 'low': 2, 'unknown': 1 };
+                d.services.forEach(svc => {
+                    svc.cves.forEach(cve => {
+                        if (severityOrder[cve.severity] > severityOrder[highestSeverity]) {
+                            highestSeverity = cve.severity;
+                        }
+                    });
+                });
+
+                if (d.status === 'down') return '#ef4444';
+                
+                switch(highestSeverity) {
+                    case 'critical': return varToRgb('--critical-color');
+                    case 'high': return varToRgb('--high-color');
+                    case 'medium': return varToRgb('--medium-color');
+                    case 'low': return varToRgb('--low-color');
+                    default: return varToRgb('--unknown-color');
+                }
+            })
+            .on("mouseover", function(event, d) {
+                const tooltip = d3.select("body").append("div")
+                    .attr("class", "tooltip")
+                    .style("opacity", 0);
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                const displayHostname = d.hostname && d.hostname !== 'N/A' ? d.hostname : 'Hostname não detectado';
+                tooltip.html(`<strong>IP:</strong> ${d.id}<br/>
+                              <strong>Hostname:</strong> ${displayHostname}<br/>
+                              <strong>OS:</strong> ${d.os}<br/>
+                              <strong>Vulnerabilidades:</strong> ${d.total_cves}<br/>
+                              <strong>Status:</strong> ${d.status}`)
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", function(d) {
+                d3.selectAll(".tooltip").remove();
+            })
+            .on("click", function(event, d) {
+                let servicesHtml = '<h4>Serviços:</h4><table class="results-table"><thead><tr><th>Porta</th><th>Serviço</th><th>Produto</th><th>Versão</th><th>CVEs</th></tr></thead><tbody>';
+                d.services.forEach(svc => {
+                    let cvesBadges = svc.cves.map(c => `<span class="cve-badge ${c.severity}">${c.id}</span>`).join(' ');
+                    servicesHtml += `<tr><td>${svc.port}</td><td>${svc.name}</td><td>${svc.product || '-'}</td><td>${svc.version || '-'}</td><td>${cvesBadges || 'Nenhuma'}</td></tr>`;
+                });
+                servicesHtml += '</tbody></table>';
+
+                const details = `
+                    <p><strong>IP:</strong> ${d.id}</p>
+                    <p><strong>Hostname:</strong> ${d.hostname && d.hostname !== 'N/A' ? d.hostname : 'Não detectado'}</p>
+                    <p><strong>Sistema Operacional:</strong> ${d.os} (Família: ${d.os_details.family}, Geração: ${d.os_details.generation}, Precisão: ${d.os_details.accuracy || 'N/A'}%)</p>
+                    <p><strong>Status:</strong> ${d.status}</p>
+                    <p><strong>Vulnerabilidades Encontradas:</strong> ${d.total_cves}</p>
+                    ${servicesHtml}
+                `;
+                showModal(`Detalhes do Ativo: ${d.id}`, '', details, false);
+            });
+
+
+        node.append("text")
+            .attr("dy", d => Math.min(30, 10 + d.total_cves * 0.5) + 10)
+            .text(d => d.name);
+
+        simulation
+            .nodes(nodes)
+            .on("tick", ticked);
+
+        simulation.force("link")
+            .links(links);
+
+        function ticked() {
+            link
+                .attr("x1", d => d.source.x)
+                .attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x)
+                .attr("y2", d => d.target.y);
+
+            node
+                .attr("transform", d => `translate(${d.x},${d.y})`);
+        }
+
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+    }
+
+    // --- Recomendações (Tab 4) ---
+    function displayRecommendations(vulnerabilities) {
+        const listDiv = document.getElementById('recommendations-list');
+        listDiv.innerHTML = '';
+
+        const ipNavbar = document.getElementById('recommendations-ip-navbar'); // NOVO: Elemento para o navbar de IP
+        ipNavbar.innerHTML = ''; // Limpa o navbar
+
+        if (vulnerabilities.length === 0) {
+            listDiv.innerHTML = '<p style="text-align: center; color: var(--gray-600);">Nenhuma recomendação disponível (nenhuma vulnerabilidade detectada).</p>';
+            return;
+        }
+
+        // 1. Criar o Navbar de IPs para Recomendações
+        const uniqueIps = new Set();
+        vulnerabilities.forEach(vuln => {
+            vuln.affected_ips.forEach(ip => uniqueIps.add(ip));
+        });
+        const sortedIps = Array.from(uniqueIps).sort((a, b) => {
+            const ipToNum = ip => ip.split('.').reduce((acc, octet) => (acc << 8) + parseInt(octet, 10), 0);
+            return ipToNum(a) - ipToNum(b);
+        });
+
+        // Botão "Todos os IPs"
+        const allIpButton = document.createElement('button');
+        allIpButton.textContent = 'Todos os IPs';
+        allIpButton.className = `ip-button ${currentRecommendationsFilterIp === 'all' ? 'active' : ''}`;
+        allIpButton.addEventListener('click', () => {
+            currentRecommendationsFilterIp = 'all'; // Atualiza o estado do filtro
+            displayRecommendations(globalUniqueVulnerabilities); // Re-renderiza com todas as recomendações
+        });
+        ipNavbar.appendChild(allIpButton);
+
+        // Botões para cada IP único
+        sortedIps.forEach(ip => {
+            const button = document.createElement('button');
+            button.textContent = ip;
+            button.className = `ip-button ${currentRecommendationsFilterIp === ip ? 'active' : ''}`;
+            button.addEventListener('click', () => {
+                currentRecommendationsFilterIp = ip; // Atualiza o estado do filtro
+                displayRecommendations(globalUniqueVulnerabilities); // Re-renderiza com o filtro de IP
+            });
+            ipNavbar.appendChild(button);
+        });
+
+        // 2. Filtrar recomendações com base no IP selecionado
+        const filteredVulnerabilities = vulnerabilities.filter(vuln => {
+            return currentRecommendationsFilterIp === 'all' || vuln.affected_ips.includes(currentRecommendationsFilterIp);
+        });
+
+        if (filteredVulnerabilities.length === 0) {
+            listDiv.innerHTML = '<p style="text-align: center; color: var(--gray-600);">Nenhuma recomendação encontrada para o IP selecionado.</p>';
+            return;
+        }
+
+        const uniqueRecommendationsMap = {};
+
+        filteredVulnerabilities.forEach(vuln => { // Usar filteredVulnerabilities
+            let serviceName = 'Software Genérico';
+            if (vuln.affected_service) {
+                const match = vuln.affected_service.match(/^([^\s(]+)/);
+                if (match && match[1]) {
+                    serviceName = match[1];
+                } else {
+                    serviceName = vuln.affected_service;
+                }
+            }
+
+            let recommendationTitle = `Recomendação para ${serviceName}: Atualizar Software`;
+            let recommendationDescription = 'Atualize o software afetado para a versão mais recente e aplique todos os patches de segurança.';
+            let category = vuln.severity;
+            
+            if (vuln.cve_id.includes('Log4Shell') || vuln.cve_id.includes('CVE-2021-44228')) {
+                recommendationTitle = 'Atualizar Apache Log4j (Log4Shell)';
+                recommendationDescription = 'Atualize o Apache Log4j para a versão 2.17.0 ou superior em todos os servidores afetados. Verifique todos os serviços que usam Log4j. Bloqueie o tráfego de saída desnecessário. Implemente um WAF (Web Application Firewall).';
+                category = 'critical';
+            } else if (vuln.affected_service.includes('OpenSSH')) {
+                recommendationTitle = 'Atualizar OpenSSH e Fortalecer Configurações';
+                recommendationDescription = 'Atualize o OpenSSH para a versão mais recente e desactive métodos de autenticação fracos. Use autenticação baseada em chave SSH, desative login de root direto, limite tentativas de login e configure firewalls para permitir acesso apenas de IPs confiáveis.';
+                category = 'high';
+            } else if (vuln.affected_service.includes('Apache httpd')) {
+                recommendationTitle = 'Manter Apache HTTPd Atualizado e Seguro';
+                recommendationDescription = 'Mantenha o servidor Apache HTTPd atualizado e revise as configurações de segurança (ex: desativar diretórios listáveis, configurar TLS/SSL, usar um firewall de aplicação web, aplicar o princípio do menor privilégio).';
+                category = 'medium';
+            } else if (vuln.port === 445 || vuln.affected_service.includes('SMB')) { 
+                 recommendationTitle = 'Restringir Acesso à Porta SMB (445)';
+                 recommendationDescription = 'Restrinja o acesso à porta SMB (445) apenas para IPs confiáveis. Crie regras de firewall para bloquear o acesso externo. Garanta que o SMBv1 esteja desativado em todos os sistemas operacionais. Use o SMBv2 ou SMBv3 com criptografia.';
+                 category = 'high';
+            } else if (vuln.cve_id !== 'Detalhes não puderam ser obtidos do NVD.' && vuln.severity !== 'unknown') {
+                recommendationTitle = `Aplicar Patch para ${vuln.cve_id}`;
+                recommendationDescription = `Revisar e aplicar patches de segurança para a vulnerabilidade ${vuln.cve_id} no serviço afetado (${vuln.affected_service}). Consulte as referências oficiais do vendor para passos específicos de mitigação.`;
+            }
+
+            const key = recommendationTitle;
+            if (!uniqueRecommendationsMap[key]) {
+                uniqueRecommendationsMap[key] = {
+                    title: recommendationTitle,
+                    description: recommendationDescription,
+                    category: category,
+                    affected_ips: new Set()
+                };
+            }
+            vuln.affected_ips.forEach(ip => uniqueRecommendationsMap[key].affected_ips.add(ip));
+        });
+
+        const severityOrder = { 'critical': 5, 'high': 4, 'medium': 3, 'low': 2, 'unknown': 1 };
+        const sortedRecommendations = Object.values(uniqueRecommendationsMap).sort((a, b) => {
+            return severityOrder[b.category] - severityOrder[a.category];
+        });
+
+
+        sortedRecommendations.forEach(rec => {
+            const item = document.createElement('div');
+            item.className = 'recommendation-item';
+            const displayCategory = rec.category.charAt(0).toUpperCase() + rec.category.slice(1);
+            item.innerHTML = `
+                <div class="recommendation-info">
+                    <h4>${rec.title}</h4>
+                    <p>${rec.description}</p>
+                    <p>Dispositivos afetados: <strong>${Array.from(rec.affected_ips).join(', ')}</strong></p>
+                </div>
+                <span class="severity-badge ${rec.category}">${displayCategory}</span>
+                <button class="btn btn-secondary btn-sm mark-as-resolved-btn">Marcar como Resolvido</button>
+            `;
+            listDiv.appendChild(item);
+        });
+
+        document.querySelectorAll('.mark-as-resolved-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                this.closest('.recommendation-item').remove();
+            });
+        });
+    }
+
+    // --- Lógica de Abas ---
+    document.querySelectorAll('.tabs .tab-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const tabId = this.dataset.tab;
+            activateTab(tabId);
+        });
+    });
+
+    function activateTab(tabId) {
+        document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+        document.querySelector(`.tab-button[data-tab="${tabId}"]`).classList.add('active');
+        document.getElementById(tabId).classList.add('active');
+
+        if (tabId === 'asset-map-tab' && globalScanResults.length > 0) {
+            setTimeout(() => displayAssetMap(globalScanResults), 50);
+        } else if (tabId === 'vulnerabilities-tab' && globalUniqueVulnerabilities.length > 0) {
+            displayVulnerabilities(globalUniqueVulnerabilities, currentVulnerabilityFilterIp);
+        } else if (tabId === 'recommendations-tab' && globalUniqueVulnerabilities.length > 0) { // NOVO: Ativação para recomendações
+            displayRecommendations(globalUniqueVulnerabilities); // Chama com o filtro atual, que é 'all' no início
+        }
+    }
+
+    // --- Lógica de Opções de Formulário ---
+    document.querySelectorAll('.scan-option[data-speed]').forEach(option => {
         option.addEventListener('click', function() {
-            document.querySelectorAll('.scan-option').forEach(opt => opt.classList.remove('selected'));
+            document.querySelectorAll('.scan-option[data-speed]').forEach(opt => opt.classList.remove('selected'));
             this.classList.add('selected');
         });
     });
-</script>
 
+    document.querySelectorAll('.scan-option[data-ports]').forEach(option => {
+        option.addEventListener('click', function() {
+            document.querySelectorAll('.scan-option[data-ports]').forEach(opt => opt.classList.remove('selected'));
+            this.classList.add('selected');
+        });
+    });
+
+    document.getElementById('os-detection').addEventListener('click', function() {
+        this.classList.toggle('selected');
+    });
+
+    document.querySelector('button[type="reset"]').addEventListener('click', function() {
+        document.querySelectorAll('.scan-option').forEach(opt => opt.classList.remove('selected'));
+        document.querySelector('.scan-option[data-speed="T5"]').classList.add('selected');
+        document.querySelector('.scan-option[data-ports="top_100"]').classList.add('selected');
+        document.getElementById('os-detection').classList.remove('selected');
+        
+        document.getElementById('results-card').style.display = 'none';
+
+        document.getElementById('vulnerabilities-list').innerHTML = ''; 
+        document.getElementById('vulnerabilities-ip-navbar').innerHTML = '';
+        document.getElementById('recommendations-list').innerHTML = '';
+        document.getElementById('recommendations-ip-navbar').innerHTML = ''; // NOVO: Limpa a navbar de recomendações
+        document.getElementById('count-critical').textContent = '0';
+        document.getElementById('count-high').textContent = '0';
+        document.getElementById('count-medium').textContent = '0';
+        document.getElementById('count-low').textContent = '0';
+        document.getElementById('count-unknown').textContent = '0';
+        document.getElementById('count-total-devices').textContent = '0';
+        document.getElementById('count-servers').textContent = '0';
+        document.getElementById('count-workstations').textContent = '0';
+        document.getElementById('count-iot').textContent = '0';
+        
+        if (vulnerabilityChartInstance) {
+            vulnerabilityChartInstance.destroy();
+            vulnerabilityChartInstance = null;
+        }
+
+        d3.select("#asset-map-svg").html('');
+    });
+
+    document.getElementById('userDropdown').addEventListener('click', function() {
+        const dropdownContent = document.getElementById('dropdownContent');
+        dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+    });
+
+    window.addEventListener('click', function(event) {
+        if (!event.target.matches('.dropbtn')) {
+            const dropdowns = document.getElementsByClassName('dropdown-content');
+            for (let i = 0; i < dropdowns.length; i++) {
+                const openDropdown = dropdowns[i];
+                if (openDropdown.style.display === 'block') {
+                    openDropdown.style.display = 'none';
+                }
+            }
+        }
+    });
+
+    document.getElementById('logoutButton').addEventListener('click', function() {
+        showModal('Logout', 'Funcionalidade não implementada.', '', true);
+    });
+
+    </script>
 
 </body>
 </html>
